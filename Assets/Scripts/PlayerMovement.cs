@@ -3,9 +3,8 @@
 class PlayerMovement : MonoBehaviour
 {
 
-    float VelocityLimit = 50;
-    float AccelerationRate = .5f;
-    float DecelerationRate = .1f;
+    const float AccelerationRate = 4f;
+    const float DecelerationRate = 1.1f;
 
     Vector3 velocity;
 
@@ -20,38 +19,28 @@ class PlayerMovement : MonoBehaviour
 
         if (Input.GetKey(KeyCode.W))
         {
-            acceleration += transform.forward * AccelerationRate * Time.deltaTime;
+            acceleration += transform.forward;
         }
         if (Input.GetKey(KeyCode.A))
         {
-            acceleration += -transform.right * AccelerationRate * Time.deltaTime;
+            acceleration += -transform.right;
         }
         if (Input.GetKey(KeyCode.S))
         {
-            acceleration += -transform.forward * AccelerationRate * Time.deltaTime;
+            acceleration += -transform.forward;
         }
         if (Input.GetKey(KeyCode.D))
         {
-            acceleration += transform.right * AccelerationRate * Time.deltaTime;
+            acceleration += transform.right;
         }
-        velocity += acceleration;
-    }
-
-    void HandleDeceleration()
-    {
-        Vector3 deceleration = new Vector3(
-            System.Math.Sign(velocity.x),
-            System.Math.Sign(velocity.y),
-            System.Math.Sign(velocity.z)) * DecelerationRate;
-        Debug.Log(deceleration.ToString());
-        velocity -= deceleration / 2;
+        velocity += acceleration * AccelerationRate * Time.deltaTime;
     }
 
     void HandleVelocity()
     {
         HandleAcceleration();
-        HandleDeceleration();
         transform.position += velocity;
+        velocity /= DecelerationRate;
     }
 
     void Update()
