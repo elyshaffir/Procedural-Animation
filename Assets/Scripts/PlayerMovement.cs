@@ -2,6 +2,7 @@
 
 class PlayerMovement : MonoBehaviour
 {
+    public Camera playerCamera;
 
     const float AccelerationRate = 4f;
     const float DecelerationRate = 1.1f;
@@ -36,8 +37,14 @@ class PlayerMovement : MonoBehaviour
         velocity += acceleration * AccelerationRate * Time.deltaTime;
     }
 
+    void HandleRotation()
+    {
+        transform.eulerAngles = new Vector3(0, playerCamera.GetComponent<PlayerCamera>().GetYaw(), 0);
+    }
+
     void HandleVelocity()
     {
+        HandleRotation();
         HandleAcceleration();
         transform.position += velocity;
         velocity /= DecelerationRate;
@@ -50,6 +57,7 @@ class PlayerMovement : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        Gizmos.DrawWireSphere(transform.position, 1);
+        Gizmos.matrix = transform.localToWorldMatrix;
+        Gizmos.DrawWireSphere(Vector3.zero, 1);
     }
 }
