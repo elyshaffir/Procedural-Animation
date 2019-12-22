@@ -6,7 +6,8 @@ class PlayerCamera : MonoBehaviour
 
     const float HorizontalSpeed = 3.0f;
     const float VerticalSpeed = 3.0f;
-    const float DistanceFromCamera = 4;
+    const float DistanceFromCamera = 3.75f;
+    const float YOffset = 2.25f;
 
     CursorLockMode wantedMode;
     bool mouseActive = true;
@@ -44,6 +45,7 @@ class PlayerCamera : MonoBehaviour
     void UpdateLocation()
     {
         transform.position = player.transform.position - transform.forward * DistanceFromCamera;
+        transform.position = new Vector3(transform.position.x, transform.position.y + YOffset, transform.position.z);
     }
 
     void SetCursorState()

@@ -1,13 +1,12 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
 class MomentumMovement : MonoBehaviour
 {
-    const float Speed = 400f;
-
     public GameObject playerCamera;
 
     CharacterController controller;
+    float speed = 400f;
 
     void Start()
     {
@@ -18,7 +17,7 @@ class MomentumMovement : MonoBehaviour
     {
         Vector3 moveVector = playerCamera.transform.forward * Input.GetAxis("Vertical");
         moveVector += playerCamera.transform.right * Input.GetAxis("Horizontal");
-        moveVector *= Speed * Time.deltaTime;
+        moveVector *= speed * Time.deltaTime;
         controller.SimpleMove(moveVector);
     }
 }
