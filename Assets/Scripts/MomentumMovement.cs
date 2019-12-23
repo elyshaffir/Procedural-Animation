@@ -6,29 +6,29 @@ class MomentumMovement : MonoBehaviour
     public GameObject playerCamera;
 
     CharacterController controller;
-    float speed = 200f;
+    float speed = 400f;
 
     void Start()
     {
         controller = GetComponent<CharacterController>();
     }
 
-    Vector3 Sign(Vector3 vector)
+    Vector3 ScaleDirectionVector(Vector3 direction)
     {
+        float multiplier = 1 / (Mathf.Abs(direction.x) + Mathf.Abs(direction.z));
         return new Vector3(
-            Mathf.Sign(vector.x),
-            Mathf.Sign(vector.y),
-            Mathf.Sign(vector.z)
+            direction.x * multiplier,
+            0,
+            direction.z * multiplier
         );
     }
 
     void MoveAccordingToCamera()
     {
-        Vector3 moveVector = Sign(playerCamera.transform.forward) * Input.GetAxis("Vertical");
-        moveVector += Sign(playerCamera.transform.right) * Input.GetAxis("Horizontal");
+        Vector3 moveVector = ScaleDirectionVector(playerCamera.transform.forward) * Input.GetAxis("Vertical");
+        moveVector += ScaleDirectionVector(playerCamera.transform.right) * Input.GetAxis("Horizontal");
         moveVector *= speed * Time.deltaTime;
         controller.SimpleMove(moveVector);
-        Debug.Log(playerCamera.transform.forward);
     }
 
     void RotateAccordingToVelocity()
