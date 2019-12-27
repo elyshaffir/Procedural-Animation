@@ -4,6 +4,7 @@ using UnityEngine;
 class MomentumMovement : MonoBehaviour
 {
     public GameObject playerCamera;
+    public GameObject playerModel;
 
     CharacterController controller;
     float speed = 400f;
@@ -31,33 +32,39 @@ class MomentumMovement : MonoBehaviour
         moveVector += ScaleDirectionVector(playerCamera.transform.right) * Input.GetAxis("Horizontal");
         moveVector *= speed * Time.deltaTime;
         controller.SimpleMove(moveVector);
+        playerModel.transform.position = transform.position;
     }
 
     void RotateToVelocity()
     {
         Vector3 lookAt = transform.position + controller.velocity.normalized;
-        Vector3 targetPostition = new Vector3(lookAt.x, transform.position.y, lookAt.z);
-        if (targetPostition - transform.position != Vector3.zero)
+        Vector3 targetPosition = new Vector3(lookAt.x, transform.position.y, lookAt.z);
+        if (targetPosition - transform.position != Vector3.zero)
         {
-            Quaternion q = Quaternion.LookRotation(targetPostition - transform.position);
+            Quaternion q = Quaternion.LookRotation(targetPosition - transform.position);
             transform.rotation = Quaternion.RotateTowards(transform.rotation, q, 500 * Time.deltaTime);
         }
 
     }
 
-    void TiltToAcceleration()
+    Vector3 CalculateTilt(Vector3 acceleration)
     {
-        // WHENEVER HE ACCELERATES it tilts in that direction!
-        // When he collides face first into the wall, it tilts backwards
-
-        Vector3 centerOfMass = controller.center + controller.transform.position;
-        Vector3 acceleration = controller.velocity / Time.deltaTime - lastVelocity;
-        Vector3 tilt = new Vector3(acceleration.z, 0, acceleration.x) / 3; // Rotation flipped in some directions        
-        Quaternion targetRotation = Quaternion.Euler(transform.eulerAngles + tilt);
-        controller.transform.GetChild(0).rotation = Quaternion.Lerp(controller.transform.GetChild(0).rotation, targetRotation, 10 * Time.deltaTime);
+        Vector3 tiltAxis = Vector3.Cross(acceleration, Vector3.up);
+        tiltAxis.y = 0;
+        Quaternion targetRotation = Quaternion.AngleAxis(30, tiltAxis) * transform.rotation;
+        return targetRotation.eulerAngles;
     }
 
-    void Update()
+    void TiltToAcceleration()
+    {
+        Vector3 centerOfMass = controller.center + controller.transform.position;
+        Vector3 acceleration = controller.velocity / Time.deltaTime - lastVelocity;
+        Vector3 tilt = CalculateTilt(acceleration);
+        Quaternion targetRotation = Quaternion.Euler(tilt);
+        playerModel.transform.rotation = Quaternion.Lerp(playerModel.transform.rotation, targetRotation, 10 * Time.deltaTime);
+    }
+
+    void FixedUpdate()
     {
         Move();
         RotateToVelocity();

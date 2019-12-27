@@ -7,7 +7,7 @@ class PlayerCamera : MonoBehaviour
     const float HorizontalSpeed = 3.0f;
     const float VerticalSpeed = 3.0f;
     const float DistanceFromCamera = 3.75f;
-    const float YOffset = 2.25f;
+    const float YOffset = 0;
 
     CursorLockMode wantedMode;
     bool mouseActive = true;
