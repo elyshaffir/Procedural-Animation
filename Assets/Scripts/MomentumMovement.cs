@@ -49,8 +49,8 @@ class MomentumMovement : MonoBehaviour
 
     Vector3 CalculateTilt(Vector3 acceleration)
     {
+        acceleration.y = 0;
         Vector3 tiltAxis = Vector3.Cross(acceleration, Vector3.up);
-        tiltAxis.y = 0;
         float angle = Mathf.Clamp(-acceleration.magnitude, -30, 30);
         Quaternion targetRotation = Quaternion.AngleAxis(angle, tiltAxis) * transform.rotation;
         return targetRotation.eulerAngles;
