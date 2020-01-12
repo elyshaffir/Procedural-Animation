@@ -4,8 +4,8 @@ class PlayerCamera : MonoBehaviour
 {
     public GameObject player;
 
-    const float HorizontalSpeed = 3.0f;
-    const float VerticalSpeed = 3.0f;
+    const float HorizontalSpeed = 100.0f;
+    const float VerticalSpeed = 100.0f;
     const float DistanceFromCamera = 3.75f;
     const float YOffset = 0;
 
@@ -19,10 +19,10 @@ class PlayerCamera : MonoBehaviour
         wantedMode = CursorLockMode.Locked;
     }
 
-    void Update()
+    void FixedUpdate()
     {
         SetCursorState();
-        HandleCameraLook();
+        HandleCameraLook(); // Do it so that if the camera isn't being moved, by deault it would look to where the player is going
     }
 
     void HandleCameraLook()
@@ -36,8 +36,8 @@ class PlayerCamera : MonoBehaviour
 
     void UpdateRotation()
     {
-        yaw += HorizontalSpeed * Input.GetAxis("Mouse X");
-        pitch -= VerticalSpeed * Input.GetAxis("Mouse Y");
+        yaw += HorizontalSpeed * Input.GetAxis("Mouse X") * Time.deltaTime;
+        pitch -= VerticalSpeed * Input.GetAxis("Mouse Y") * Time.deltaTime;
 
         transform.eulerAngles = new Vector3(pitch, yaw, 0.0f);
     }

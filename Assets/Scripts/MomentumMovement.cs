@@ -42,7 +42,7 @@ class MomentumMovement : MonoBehaviour
         if (targetPosition - transform.position != Vector3.zero)
         {
             Quaternion q = Quaternion.LookRotation(targetPosition - transform.position);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, q, 500 * Time.deltaTime);
+            transform.rotation = Quaternion.Lerp(transform.rotation, q, 10 * Time.deltaTime);
         }
 
     }
@@ -51,8 +51,9 @@ class MomentumMovement : MonoBehaviour
     {
         acceleration.y = 0;
         Vector3 tiltAxis = Vector3.Cross(acceleration, Vector3.up);
-        float angle = Mathf.Clamp(-acceleration.magnitude, -30, 30);
+        float angle = Mathf.Clamp(-acceleration.magnitude * 2, -20, 20);
         Quaternion targetRotation = Quaternion.AngleAxis(angle, tiltAxis) * transform.rotation;
+        // add playerModel. to every transform.rotation occurance in CalculateTilt and RotateToVelocity and you get wierd behaviour when stop moving
         return targetRotation.eulerAngles;
     }
 
