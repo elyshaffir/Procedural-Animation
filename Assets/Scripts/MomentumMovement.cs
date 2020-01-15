@@ -18,21 +18,18 @@ class MomentumMovement : MonoBehaviour
 
     Vector3 ScaleDirectionVector(Vector3 direction)
     {
-        float multiplier = 1 / (Mathf.Abs(direction.x) + Mathf.Abs(direction.z));
         return new Vector3(
-            direction.x * multiplier,
+            direction.x,
             0,
-            direction.z * multiplier
-        );
+            direction.z
+        ).normalized * speed * Time.deltaTime;
     }
 
     void Move()
     {
         Vector3 moveVector = ScaleDirectionVector(playerCamera.transform.forward) * Input.GetAxis("Vertical");
         moveVector += ScaleDirectionVector(playerCamera.transform.right) * Input.GetAxis("Horizontal");
-        moveVector *= speed * Time.deltaTime;
         controller.SimpleMove(moveVector);
-        playerModel.transform.position = transform.position;
     }
 
     void RotateToVelocity()
@@ -53,14 +50,12 @@ class MomentumMovement : MonoBehaviour
         Vector3 tiltAxis = Vector3.Cross(acceleration, Vector3.up);
         float angle = Mathf.Clamp(-acceleration.magnitude * 2, -20, 20);
         Quaternion targetRotation = Quaternion.AngleAxis(angle, tiltAxis) * transform.rotation;
-        // add playerModel. to every transform.rotation occurance in CalculateTilt and RotateToVelocity and you get wierd behaviour when stop moving
         return targetRotation.eulerAngles;
     }
 
     void TiltToAcceleration()
     {
-        Vector3 centerOfMass = controller.center + controller.transform.position;
-        Vector3 acceleration = controller.velocity / Time.deltaTime - lastVelocity;
+        Vector3 acceleration = (controller.velocity - lastVelocity) / Time.deltaTime;
         Vector3 tilt = CalculateTilt(acceleration);
         Quaternion targetRotation = Quaternion.Euler(tilt);
         playerModel.transform.rotation = Quaternion.Lerp(playerModel.transform.rotation, targetRotation, 10 * Time.deltaTime);
@@ -71,6 +66,6 @@ class MomentumMovement : MonoBehaviour
         Move();
         RotateToVelocity();
         TiltToAcceleration();
-        lastVelocity = controller.velocity / Time.deltaTime;
+        lastVelocity = controller.velocity;
     }
 }
