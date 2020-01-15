@@ -1,72 +1,79 @@
-using System.Collections.Generic;
 using UnityEngine;
 
-
+[RequireComponent(typeof(CharacterController))]
 class MomentumMovement : MonoBehaviour
 {
 
-    const float MOVEMENT_SPEED_LIMIT = 30;
+    /*
+        Can chage direction very easily, not very realistic.
+    */
 
-    public float movementSpeed;
-    public float rotationSpeed;
-    public float jumpForce;
+    const float MovementSpeed = 500f;
+    const float RotationSpeed = 5;
+    const float TiltAngle = 20;
 
-    Rigidbody body;
-    float vertical;
-    float horizontal;
-    HashSet<GameObject> environmentTouching;
+    public GameObject playerCamera;
+    public GameObject playerModel;
 
-    void Awake()
-    {
-        environmentTouching = new HashSet<GameObject>();
-    }
+    CharacterController controller;
+    Vector3 lastVelocity;
 
     void Start()
     {
-        body = GetComponent<Rigidbody>();
+        controller = GetComponent<CharacterController>();
+        lastVelocity = controller.velocity;
+    }
+
+    Vector3 ScaleDirectionVector(Vector3 direction)
+    {
+        return new Vector3(
+            direction.x,
+            0,
+            direction.z
+        ).normalized * MovementSpeed * Time.deltaTime;
+    }
+
+    void Move()
+    {
+        Vector3 moveVector = ScaleDirectionVector(playerCamera.transform.forward) * Input.GetAxis("Vertical");
+        moveVector += ScaleDirectionVector(playerCamera.transform.right) * Input.GetAxis("Horizontal");
+        controller.SimpleMove(moveVector);
+    }
+
+    void RotateToVelocity()
+    {
+        Vector3 lookAt = transform.position + controller.velocity.normalized;
+        Vector3 targetPosition = new Vector3(lookAt.x, transform.position.y, lookAt.z);
+        if (targetPosition - transform.position != Vector3.zero)
+        {
+            Quaternion q = Quaternion.LookRotation(targetPosition - transform.position);
+            transform.rotation = Quaternion.Lerp(transform.rotation, q, RotationSpeed * Time.deltaTime);
+        }
+
+    }
+
+    Vector3 CalculateTilt(Vector3 acceleration)
+    {
+        acceleration.y = 0;
+        Vector3 tiltAxis = Vector3.Cross(acceleration, Vector3.up);
+        float angle = Mathf.Clamp(-acceleration.magnitude / 2, -TiltAngle, TiltAngle);
+        Quaternion targetRotation = Quaternion.AngleAxis(angle, tiltAxis) * transform.rotation;
+        return targetRotation.eulerAngles;
+    }
+
+    void TiltToAcceleration()
+    {
+        Vector3 acceleration = (controller.velocity - lastVelocity) / Time.deltaTime;
+        Vector3 tilt = CalculateTilt(acceleration);
+        Quaternion targetRotation = Quaternion.Euler(tilt);
+        playerModel.transform.rotation = Quaternion.Lerp(playerModel.transform.rotation, targetRotation, RotationSpeed * Time.deltaTime);
     }
 
     void FixedUpdate()
     {
-        vertical = Input.GetAxis("Vertical");
-        horizontal = Input.GetAxis("Horizontal");
-        if (environmentTouching.Count > 0)
-        {
-            if (Input.GetAxis("Jump") > 0)
-            {
-                body.AddForce(transform.up * jumpForce);
-            }
-            Vector3 velocity = (transform.forward * vertical) * movementSpeed * Time.fixedDeltaTime;
-            velocity.y = body.velocity.y;
-            body.velocity += velocity;
-        }
-        Vector3 angularVelocity = (transform.up * horizontal) * rotationSpeed * Time.fixedDeltaTime;
-        angularVelocity.x = body.angularVelocity.y;
-        angularVelocity.z = body.angularVelocity.z;
-        body.angularVelocity += angularVelocity;
-        if (body.velocity.magnitude > MOVEMENT_SPEED_LIMIT)
-        {
-            body.velocity = Vector3.ClampMagnitude(body.velocity, MOVEMENT_SPEED_LIMIT);
-        }
-        if (body.angularVelocity.magnitude > MOVEMENT_SPEED_LIMIT)
-        {
-            body.angularVelocity = Vector3.ClampMagnitude(body.angularVelocity, MOVEMENT_SPEED_LIMIT);
-        }
-    }
-
-    void OnCollisionEnter(Collision collision)
-    {
-        if (collision.transform.root.tag == ("Environment"))
-        {
-            environmentTouching.Add(collision.gameObject);
-        }
-    }
-
-    void OnCollisionExit(Collision collision)
-    {
-        if (collision.transform.root.tag == ("Environment"))
-        {
-            environmentTouching.Remove(collision.gameObject);
-        }
+        Move();
+        RotateToVelocity();
+        TiltToAcceleration();
+        lastVelocity = controller.velocity;
     }
 }
