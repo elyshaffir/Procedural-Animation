@@ -1,13 +1,7 @@
 using UnityEngine;
 
-[RequireComponent(typeof(CharacterController))]
 class MomentumMovement : MonoBehaviour
 {
-
-    /*
-        Can chage direction very easily, not very realistic.
-    */
-
     const float MovementSpeed = 500f;
     const float RotationSpeed = 5;
     const float TiltAngle = 20;
@@ -15,13 +9,13 @@ class MomentumMovement : MonoBehaviour
     public GameObject playerCamera;
     public GameObject playerModel;
 
-    CharacterController controller;
+    Rigidbody rb;
     Vector3 lastVelocity;
 
     void Start()
     {
-        controller = GetComponent<CharacterController>();
-        lastVelocity = controller.velocity;
+        rb = GetComponent<Rigidbody>();
+        lastVelocity = rb.velocity;
     }
 
     Vector3 ScaleDirectionVector(Vector3 direction)
@@ -37,12 +31,12 @@ class MomentumMovement : MonoBehaviour
     {
         Vector3 moveVector = ScaleDirectionVector(playerCamera.transform.forward) * Input.GetAxis("Vertical");
         moveVector += ScaleDirectionVector(playerCamera.transform.right) * Input.GetAxis("Horizontal");
-        controller.SimpleMove(moveVector);
+        rb.AddForce(moveVector);
     }
 
     void RotateToVelocity()
     {
-        Vector3 lookAt = transform.position + controller.velocity.normalized;
+        Vector3 lookAt = transform.position + rb.velocity.normalized;
         Vector3 targetPosition = new Vector3(lookAt.x, transform.position.y, lookAt.z);
         if (targetPosition - transform.position != Vector3.zero)
         {
@@ -63,7 +57,7 @@ class MomentumMovement : MonoBehaviour
 
     void TiltToAcceleration()
     {
-        Vector3 acceleration = (controller.velocity - lastVelocity) / Time.deltaTime;
+        Vector3 acceleration = (rb.velocity - lastVelocity) / Time.deltaTime;
         Vector3 tilt = CalculateTilt(acceleration);
         Quaternion targetRotation = Quaternion.Euler(tilt);
         playerModel.transform.rotation = Quaternion.Lerp(playerModel.transform.rotation, targetRotation, RotationSpeed * Time.deltaTime);
@@ -74,6 +68,6 @@ class MomentumMovement : MonoBehaviour
         Move();
         RotateToVelocity();
         TiltToAcceleration();
-        lastVelocity = controller.velocity;
+        lastVelocity = rb.velocity;
     }
 }
