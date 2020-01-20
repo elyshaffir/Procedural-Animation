@@ -6,13 +6,17 @@ class PlayerCamera : MonoBehaviour
 
     const float HorizontalSpeed = 100.0f;
     const float VerticalSpeed = 100.0f;
+    const float MinPitch = -20f;
+    const float MaxPitch = 90;
     const float DistanceFromCamera = 3.75f;
-    const float YOffset = 0;
+    const float YOffset = 0f;
+
+    public LayerMask solidObjects;
 
     CursorLockMode wantedMode;
-    bool mouseActive = true;
-    float yaw = 0.0f;
-    float pitch = 0.0f;
+    bool mouseActive;
+    float yaw;
+    float pitch;
 
     void Start()
     {
@@ -38,14 +42,25 @@ class PlayerCamera : MonoBehaviour
     {
         yaw += HorizontalSpeed * Input.GetAxis("Mouse X") * Time.deltaTime;
         pitch -= VerticalSpeed * Input.GetAxis("Mouse Y") * Time.deltaTime;
+        pitch = Mathf.Clamp(pitch, MinPitch, MaxPitch);
 
         transform.eulerAngles = new Vector3(pitch, yaw, 0.0f);
     }
 
     void UpdateLocation()
     {
-        transform.position = player.transform.position - transform.forward * DistanceFromCamera;
-        transform.position = new Vector3(transform.position.x, transform.position.y + YOffset, transform.position.z);
+        Vector3 idealPosition = player.transform.position - transform.forward * DistanceFromCamera;
+        idealPosition = new Vector3(idealPosition.x, idealPosition.y + YOffset, idealPosition.z);
+        Vector3 directionToCamera = idealPosition - player.transform.position;
+        RaycastHit hit;
+        if (Physics.Raycast(player.transform.position, directionToCamera, out hit, DistanceFromCamera, solidObjects))
+        {
+            transform.position = player.transform.position + directionToCamera.normalized * hit.distance;
+        }
+        else
+        {
+            transform.position = idealPosition;
+        }
     }
 
     void SetCursorState()
