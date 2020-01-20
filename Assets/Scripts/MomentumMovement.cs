@@ -3,6 +3,7 @@ using UnityEngine;
 class MomentumMovement : MonoBehaviour
 {
     const float MovementSpeed = 1000f;
+    const float MaxVelocity = 50;
     const float RotationSpeed = 5;
     const float TiltAngle = 20;
 
@@ -41,15 +42,11 @@ class MomentumMovement : MonoBehaviour
     void CalculateGrounded()
     {
         RaycastHit hit;
-        // The grounded raycas should be casted from: (transform.position + moveVector.normalized * capsuleRadius)
-        // This approach can work temporarily, but with things like the top of the ramp the character freezes
-        // To solve this, the grounded raycast should be casted from the collision point (no idea how to make it functional with multiple collisions yet)
-        grounded = Physics.Raycast(transform.position + moveVector.normalized * .54f, -Vector3.up, out hit, 2, ground);
-        Debug.DrawLine(transform.position + moveVector.normalized * .54f, transform.position + moveVector.normalized * .54f - Vector3.up * 2, Color.blue);
+        Vector3 groundedRaycastPosition = transform.position;
+        grounded = Physics.Raycast(groundedRaycastPosition, -Vector3.up, out hit, 2, ground);
         if (grounded)
         {
             Vector3 extraForceDirection = Vector3.Cross(hit.normal, Vector3.Cross(moveVector, Vector3.up));
-            Debug.DrawLine(hit.point, hit.point + extraForceDirection, Color.red);
             extraForce = extraForceDirection.normalized * MovementSpeed * Time.deltaTime;
         }
     }
@@ -59,6 +56,11 @@ class MomentumMovement : MonoBehaviour
         if (grounded)
         {
             rb.AddForce(moveVector * 0 + extraForce);
+            rb.velocity = Vector3.ClampMagnitude(rb.velocity, MaxVelocity);
+        }
+        if (moveVector == Vector3.zero)
+        {
+            rb.velocity /= 1.03f;
         }
     }
 
@@ -86,6 +88,8 @@ class MomentumMovement : MonoBehaviour
     void TiltToAcceleration()
     {
         Vector3 acceleration = (rb.velocity - lastVelocity) / Time.deltaTime;
+        Debug.Log(acceleration.magnitude);
+        Debug.DrawLine(transform.position, transform.position + acceleration, Color.blue); // acceleration changes drastically instead of losing magnitude first
         Vector3 tilt = CalculateTilt(acceleration);
         Quaternion targetRotation = Quaternion.Euler(tilt);
         playerModel.transform.rotation = Quaternion.Lerp(playerModel.transform.rotation, targetRotation, RotationSpeed * Time.deltaTime);
