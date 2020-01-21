@@ -126,24 +126,18 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 80733504}
   m_PrefabAsset: {fileID: 0}
+--- !u!95 &23985951 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: -6057140222963153312, guid: a65e8181e1f498e4daaebced26182d86,
+    type: 3}
+  m_PrefabInstance: {fileID: 80733504}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &23985952 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: a65e8181e1f498e4daaebced26182d86,
     type: 3}
   m_PrefabInstance: {fileID: 80733504}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &23985953
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 23985950}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cbf5c18ad9474b0498267225dbfd5d2a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &80733504
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -757,6 +751,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1909808203}
   - component: {fileID: 1909808204}
+  - component: {fileID: 1909808199}
   - component: {fileID: 1909808201}
   - component: {fileID: 1909808200}
   m_Layer: 0
@@ -766,6 +761,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &1909808199
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1909808198}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbf5c18ad9474b0498267225dbfd5d2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 23985951}
 --- !u!136 &1909808200
 CapsuleCollider:
   m_ObjectHideFlags: 0

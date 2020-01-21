@@ -24,6 +24,11 @@ class MomentumMovement : MonoBehaviour
         return grounded;
     }
 
+    public float getSpeed()
+    {
+        return rb.velocity.magnitude;
+    }
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();

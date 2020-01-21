@@ -26,6 +26,7 @@ class PlayerAnimator : MonoBehaviour
         if (momentumHandler.isGrounded())
         {
             floatStep = (transform.position - lastPosition).magnitude / 3;
+            animator.SetFloat("Speed", momentumHandler.getSpeed() / 30);
             if (Mathf.Abs(runProgress) == Mathf.Abs(foot))
             {
                 multiplier *= -1;

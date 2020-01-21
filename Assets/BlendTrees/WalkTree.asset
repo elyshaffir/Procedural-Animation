@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!206 &20600000
+BlendTree:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: WalkTree
+  m_Childs:
+  - serializedVersion: 2
+    m_Motion: {fileID: -887982601649841707, guid: 4f31135e558c30147a601ddff88361d7,
+      type: 3}
+    m_Threshold: 0
+    m_Position: {x: 1, y: 1}
+    m_TimeScale: 1
+    m_CycleOffset: 0
+    m_DirectBlendParameter: RunProgress
+    m_Mirror: 0
+  - serializedVersion: 2
+    m_Motion: {fileID: -887982601649841707, guid: ec05056b52bd012468577214c34d79cd,
+      type: 3}
+    m_Threshold: 0.1875
+    m_Position: {x: 1, y: 0}
+    m_TimeScale: 1
+    m_CycleOffset: 0
+    m_DirectBlendParameter: RunProgress
+    m_Mirror: 0
+  - serializedVersion: 2
+    m_Motion: {fileID: -887982601649841707, guid: 8c9f64754ba64d04088e5fa2517292ff,
+      type: 3}
+    m_Threshold: 0.375
+    m_Position: {x: 0, y: 0}
+    m_TimeScale: 1
+    m_CycleOffset: 0
+    m_DirectBlendParameter: RunProgress
+    m_Mirror: 0
+  - serializedVersion: 2
+    m_Motion: {fileID: -887982601649841707, guid: 2cddad4171593544ca43e2db90505e2b,
+      type: 3}
+    m_Threshold: 0.5625
+    m_Position: {x: 0, y: 1}
+    m_TimeScale: 1
+    m_CycleOffset: 0
+    m_DirectBlendParameter: RunProgress
+    m_Mirror: 0
+  m_BlendParameter: RunProgress
+  m_BlendParameterY: Foot
+  m_MinThreshold: 0
+  m_MaxThreshold: 0.5625
+  m_UseAutomaticThresholds: 1
+  m_NormalizedBlendValues: 0
+  m_BlendType: 3
