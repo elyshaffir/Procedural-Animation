@@ -5,7 +5,7 @@ class MomentumMovement : MonoBehaviour
     const float MovementSpeed = 1000f;
     const float MaxGroundAngle = 50f;
     const float MaxVelocity = 50f;
-    const float SlowDownRate = 1.03f;
+    const float SlowDownRate = 1.06f;
     const float RotationSpeed = 5f;
     const float TiltAngle = 20f;
 
@@ -18,6 +18,11 @@ class MomentumMovement : MonoBehaviour
     Vector3 moveVector;
     float forceAngle;
     Vector3 extraForce;
+
+    public bool isGrounded()
+    {
+        return grounded;
+    }
 
     void Start()
     {

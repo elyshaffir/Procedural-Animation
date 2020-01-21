@@ -1,23 +1,56 @@
 ﻿using UnityEngine;
 
+[RequireComponent(typeof(MomentumMovement))]
 class PlayerAnimator : MonoBehaviour
 {
-    Animator animator;
-    float progress;
+
+    public Animator animator;
+
+    MomentumMovement momentumHandler;
+
+    Vector3 lastPosition;
+    float floatStep;
+    float runProgress;
+    float foot;
+    float multiplier = 1;
+    bool floatToSet = true;
 
     void Start()
     {
-        animator = gameObject.GetComponent<Animator>();
+        momentumHandler = GetComponent<MomentumMovement>();
+        lastPosition = transform.position;
     }
 
     void Update()
     {
-        progress += .05f;
-        if (progress >= 1)
+        if (momentumHandler.isGrounded())
         {
-            progress = 0;
-            Debug.Log("RESET");
+            floatStep = (transform.position - lastPosition).magnitude / 3;
+            if (Mathf.Abs(runProgress) == Mathf.Abs(foot))
+            {
+                multiplier *= -1;
+            }
+            if (floatToSet)
+            {
+                runProgress += floatStep * multiplier;
+                runProgress = Mathf.Clamp01(runProgress);
+                if (runProgress == 1 || runProgress == 0)
+                {
+                    floatToSet = false;
+                }
+                animator.SetFloat("RunProgress", runProgress);
+            }
+            else
+            {
+                foot += floatStep * multiplier;
+                foot = Mathf.Clamp01(foot);
+                if (foot == 1 || foot == 0)
+                {
+                    floatToSet = true;
+                }
+                animator.SetFloat("Foot", foot);
+            }
         }
-        animator.SetFloat("RunProgress", progress);
+        lastPosition = transform.position;
     }
 }
