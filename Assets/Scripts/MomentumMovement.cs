@@ -5,7 +5,7 @@ class MomentumMovement : MonoBehaviour
     const float MovementSpeed = 1000f;
     const float MaxGroundAngle = 50f;
     const float MaxVelocity = 50f;
-    const float SlowDownRate = 1.06f;
+    const float SlowDownRate = 2;
     const float RotationSpeed = 5f;
     const float TiltAngle = 20f;
 
@@ -15,9 +15,8 @@ class MomentumMovement : MonoBehaviour
 
     Rigidbody rb;
     bool grounded;
-    Vector3 moveVector;
     float forceAngle;
-    Vector3 extraForce;
+    Vector3 movementForce;
 
     public bool isGrounded()
     {
@@ -26,7 +25,7 @@ class MomentumMovement : MonoBehaviour
 
     public float getSpeed()
     {
-        return rb.velocity.magnitude;
+        return rb.velocity.magnitude / 30;
     }
 
     void Start()
@@ -36,17 +35,10 @@ class MomentumMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        CalculateMoveVector();
         CalculateGrounded();
         Move();
         RotateToVelocity();
         TiltToAcceleration();
-    }
-
-    void CalculateMoveVector()
-    {
-        moveVector = ScaleDirectionVector(playerCamera.transform.forward) * Input.GetAxis("Vertical");
-        moveVector += ScaleDirectionVector(playerCamera.transform.right) * Input.GetAxis("Horizontal");
     }
 
     Vector3 ScaleDirectionVector(Vector3 direction)
@@ -65,20 +57,29 @@ class MomentumMovement : MonoBehaviour
         forceAngle = Vector3.Angle(hit.normal, Vector3.up);
         if (grounded)
         {
-            Vector3 extraForceDirection = Vector3.Cross(hit.normal, Vector3.Cross(moveVector, Vector3.up));
-            extraForce = extraForceDirection.normalized * MovementSpeed * Time.deltaTime;
+            Vector3 extraForceDirection = Vector3.Cross(hit.normal, Vector3.Cross(CalculateMoveVector(), Vector3.up));
+            movementForce = extraForceDirection.normalized * MovementSpeed * Time.deltaTime;
         }
     }
+
+    Vector3 CalculateMoveVector()
+    {
+        Vector3 moveVector = ScaleDirectionVector(playerCamera.transform.forward) * Input.GetAxis("Vertical");
+        moveVector += ScaleDirectionVector(playerCamera.transform.right) * Input.GetAxis("Horizontal");
+        return moveVector;
+    }
+
     void Move()
     {
+
         if (grounded && forceAngle < MaxGroundAngle)
         {
-            rb.AddForce(extraForce);
+            if (movementForce == Vector3.zero)
+            {
+                movementForce = -rb.velocity * SlowDownRate;
+            }
+            rb.AddForce(movementForce);
             rb.velocity = Vector3.ClampMagnitude(rb.velocity, MaxVelocity);
-        }
-        if (moveVector == Vector3.zero)
-        {
-            rb.velocity /= SlowDownRate;
         }
     }
 
@@ -96,15 +97,15 @@ class MomentumMovement : MonoBehaviour
 
     void TiltToAcceleration()
     {
-        Vector3 tilt = CalculateTilt(moveVector);
+        Vector3 tilt = CalculateTilt();
         Quaternion targetRotation = Quaternion.Euler(tilt);
         playerModel.transform.rotation = Quaternion.Lerp(playerModel.transform.rotation, targetRotation, RotationSpeed * Time.deltaTime);
     }
 
-    Vector3 CalculateTilt(Vector3 acceleration)
+    Vector3 CalculateTilt()
     {
-        Vector3 tiltAxis = Vector3.Cross(acceleration, Vector3.up);
-        float angle = Mathf.Clamp(-acceleration.magnitude, -TiltAngle, TiltAngle);
+        Vector3 tiltAxis = Vector3.Cross(movementForce, Vector3.up);
+        float angle = Mathf.Clamp(-movementForce.magnitude * getSpeed(), -TiltAngle, TiltAngle);
         Quaternion targetRotation = Quaternion.AngleAxis(angle, tiltAxis) * transform.rotation;
         return targetRotation.eulerAngles;
     }

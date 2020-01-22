@@ -6,7 +6,7 @@ BlendTree:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: WalkTree
+  m_Name: Walk Tree
   m_Childs:
   - serializedVersion: 2
     m_Motion: {fileID: -887982601649841707, guid: 4f31135e558c30147a601ddff88361d7,
@@ -32,18 +32,18 @@ BlendTree:
     m_Threshold: 0.375
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
-    m_CycleOffset: 0
+    m_CycleOffset: 0.5
     m_DirectBlendParameter: RunProgress
-    m_Mirror: 0
+    m_Mirror: 1
   - serializedVersion: 2
     m_Motion: {fileID: -887982601649841707, guid: 2cddad4171593544ca43e2db90505e2b,
       type: 3}
     m_Threshold: 0.5625
     m_Position: {x: 0, y: 1}
     m_TimeScale: 1
-    m_CycleOffset: 0
+    m_CycleOffset: 0.5
     m_DirectBlendParameter: RunProgress
-    m_Mirror: 0
+    m_Mirror: 1
   m_BlendParameter: RunProgress
   m_BlendParameterY: Foot
   m_MinThreshold: 0
