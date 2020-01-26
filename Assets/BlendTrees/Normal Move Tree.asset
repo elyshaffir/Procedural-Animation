@@ -6,7 +6,7 @@ BlendTree:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: PlayerAnimator.controller_Move Tree
+  m_Name: Normal Move Tree
   m_Childs:
   - serializedVersion: 2
     m_Motion: {fileID: 3533066756110303443, guid: e9fac0c9da91d404c8407357008d6574,
@@ -19,7 +19,7 @@ BlendTree:
     m_Mirror: 0
   - serializedVersion: 2
     m_Motion: {fileID: 20600000, guid: e1c09bc8918d3314eb21fec793db36c3, type: 2}
-    m_Threshold: 0.1
+    m_Threshold: 0.5
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
     m_CycleOffset: 0

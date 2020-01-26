@@ -4,10 +4,12 @@ namespace ProceduralAnimation
 {
     class MomentumMovement : MonoBehaviour
     {
-        const float MovementSpeedStanding = 1000f;
-        const float MaxSpeedStanding = 20f;
-        const float MovementSpeedCrouched = 200f;
-        const float MaxSpeedCrouched = 5f;
+        const float MovementSpeedRunning = 1000f;
+        const float MaxSpeedRunning = 20f;
+        const float MovementSpeedWalking = MovementSpeedRunning / 1.5f;
+        const float MaxSpeedWalking = MaxSpeedRunning / 1.5f;
+        const float MovementSpeedCrouched = MovementSpeedRunning / 5;
+        const float MaxSpeedCrouched = MaxSpeedRunning / 5;
         const float MaxGroundAngle = 50f;
         const float SlowDownRate = 2;
         const float RotationSpeed = 5f;
@@ -37,7 +39,7 @@ namespace ProceduralAnimation
 
         public float GetSpeed()
         {
-            return rb.velocity.magnitude / MaxSpeedStanding;
+            return rb.velocity.magnitude / MaxSpeedRunning;
         }
 
         void Start()
@@ -77,25 +79,39 @@ namespace ProceduralAnimation
 
         Vector3 CalculateMovementVectors()
         {
-            crouching = Input.GetKey(KeyCode.LeftShift);
-            if (crouching)
-            {
-                movementSpeed = MovementSpeedCrouched;
-                maxMovementSpeed = MaxSpeedCrouched;
-            }
-            else
-            {
-                movementSpeed = MovementSpeedStanding;
-                maxMovementSpeed = MaxSpeedStanding;
-            }
+            HandleSpeeds();
             Vector3 moveVector = ScaleDirectionVector(playerCamera.transform.forward) * Input.GetAxis("Vertical");
             moveVector += ScaleDirectionVector(playerCamera.transform.right) * Input.GetAxis("Horizontal");
             return moveVector;
         }
 
+        void HandleSpeeds()
+        {
+            crouching = Input.GetKey(KeyCode.LeftControl);
+            float targetMaxSpeed;
+            if (crouching)
+            {
+                movementSpeed = MovementSpeedCrouched;
+                targetMaxSpeed = MaxSpeedCrouched;
+            }
+            else
+            {
+                if (Input.GetKey(KeyCode.LeftShift))
+                {
+                    movementSpeed = MovementSpeedRunning;
+                    targetMaxSpeed = MaxSpeedRunning;
+                }
+                else
+                {
+                    movementSpeed = MovementSpeedWalking;
+                    targetMaxSpeed = MaxSpeedWalking;
+                }
+            }
+            maxMovementSpeed = Mathf.Lerp(maxMovementSpeed, targetMaxSpeed, .1f);
+        }
+
         void Move()
         {
-
             if (grounded && forceAngle < MaxGroundAngle)
             {
                 if (movementForce == Vector3.zero)

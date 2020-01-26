@@ -45,7 +45,7 @@ BlendTree:
     m_DirectBlendParameter: RunProgress
     m_Mirror: 1
   m_BlendParameter: RunProgress
-  m_BlendParameterY: Foot
+  m_BlendParameterY: MovementSide
   m_MinThreshold: 0
   m_MaxThreshold: 0.5625
   m_UseAutomaticThresholds: 1

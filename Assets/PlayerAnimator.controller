@@ -1,31 +1,20 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1102 &-8254548415936820478
-AnimatorState:
-  serializedVersion: 5
+--- !u!206 &-8931246834313421863
+BlendTree:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Blend Tree
-  m_Speed: 1
-  m_CycleOffset: 0
-  m_Transitions: []
-  m_StateMachineBehaviours: []
-  m_Position: {x: 50, y: 50, z: 0}
-  m_IKOnFeet: 0
-  m_WriteDefaultValues: 1
-  m_Mirror: 0
-  m_SpeedParameterActive: 0
-  m_MirrorParameterActive: 0
-  m_CycleOffsetParameterActive: 0
-  m_TimeParameterActive: 0
-  m_Motion: {fileID: -4379268651753450517}
-  m_Tag: 
-  m_SpeedParameter: 
-  m_MirrorParameter: 
-  m_CycleOffsetParameter: 
-  m_TimeParameter: 
+  m_Name: BlendTree
+  m_Childs: []
+  m_BlendParameter: Crouch
+  m_BlendParameterY: Blend
+  m_MinThreshold: 0
+  m_MaxThreshold: 1
+  m_UseAutomaticThresholds: 1
+  m_NormalizedBlendValues: 0
+  m_BlendType: 0
 --- !u!206 &-6782329203958117145
 BlendTree:
   m_ObjectHideFlags: 1
@@ -54,45 +43,6 @@ BlendTree:
     m_Mirror: 0
   m_BlendParameter: RunProgress
   m_BlendParameterY: Blend
-  m_MinThreshold: 0
-  m_MaxThreshold: 1
-  m_UseAutomaticThresholds: 0
-  m_NormalizedBlendValues: 0
-  m_BlendType: 0
---- !u!206 &-4379268651753450517
-BlendTree:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Move Tree
-  m_Childs:
-  - serializedVersion: 2
-    m_Motion: {fileID: 3533066756110303443}
-    m_Threshold: 0
-    m_Position: {x: 0, y: 0}
-    m_TimeScale: 1
-    m_CycleOffset: 0
-    m_DirectBlendParameter: RunProgress
-    m_Mirror: 0
-  - serializedVersion: 2
-    m_Motion: {fileID: 20600000, guid: e1c09bc8918d3314eb21fec793db36c3, type: 2}
-    m_Threshold: 0.1
-    m_Position: {x: 0, y: 0}
-    m_TimeScale: 1
-    m_CycleOffset: 0
-    m_DirectBlendParameter: RunProgress
-    m_Mirror: 0
-  - serializedVersion: 2
-    m_Motion: {fileID: 20600000, guid: 6f809b5e4254be5409b99d3e84f9e0c5, type: 2}
-    m_Threshold: 1
-    m_Position: {x: 0, y: 0}
-    m_TimeScale: 1
-    m_CycleOffset: 0
-    m_DirectBlendParameter: RunProgress
-    m_Mirror: 0
-  m_BlendParameter: Speed
-  m_BlendParameterY: RunProgress
   m_MinThreshold: 0
   m_MaxThreshold: 1
   m_UseAutomaticThresholds: 0
@@ -150,6 +100,32 @@ AnimatorStateMachine:
   m_ExitPosition: {x: 800, y: 120, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
   m_DefaultState: {fileID: 0}
+--- !u!1102 &-1878343542975894113
+AnimatorState:
+  serializedVersion: 5
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Movement
+  m_Speed: 1
+  m_CycleOffset: 0
+  m_Transitions: []
+  m_StateMachineBehaviours: []
+  m_Position: {x: 50, y: 50, z: 0}
+  m_IKOnFeet: 0
+  m_WriteDefaultValues: 1
+  m_Mirror: 0
+  m_SpeedParameterActive: 0
+  m_MirrorParameterActive: 0
+  m_CycleOffsetParameterActive: 0
+  m_TimeParameterActive: 0
+  m_Motion: {fileID: 4139629314216652357}
+  m_Tag: 
+  m_SpeedParameter: 
+  m_MirrorParameter: 
+  m_CycleOffsetParameter: 
+  m_TimeParameter: 
 --- !u!1107 &-226758871687230777
 AnimatorStateMachine:
   serializedVersion: 5
@@ -184,7 +160,7 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
-  - m_Name: Foot
+  - m_Name: MovementSide
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -197,6 +173,12 @@ AnimatorController:
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
   - m_Name: Effort
+    m_Type: 1
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 0}
+  - m_Name: Crouch
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -237,6 +219,30 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!206 &3000241935436644503
+BlendTree:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Crouch Move Tree
+  m_Childs:
+  - serializedVersion: 2
+    m_Motion: {fileID: -887982601649841707, guid: 4739f6a07c78d754986e6472a979db4f,
+      type: 3}
+    m_Threshold: 0
+    m_Position: {x: 0, y: 0}
+    m_TimeScale: 1
+    m_CycleOffset: 0
+    m_DirectBlendParameter: RunProgress
+    m_Mirror: 0
+  m_BlendParameter: Crouch
+  m_BlendParameterY: Blend
+  m_MinThreshold: 1
+  m_MaxThreshold: 1
+  m_UseAutomaticThresholds: 1
+  m_NormalizedBlendValues: 0
+  m_BlendType: 0
 --- !u!206 &3533066756110303443
 BlendTree:
   m_ObjectHideFlags: 1
@@ -289,6 +295,37 @@ AnimatorStateMachine:
   m_ExitPosition: {x: 800, y: 120, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
   m_DefaultState: {fileID: 0}
+--- !u!206 &4139629314216652357
+BlendTree:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Blend Tree
+  m_Childs:
+  - serializedVersion: 2
+    m_Motion: {fileID: 20600000, guid: dae27e47b173ba2489a90177f80a7d24, type: 2}
+    m_Threshold: 0
+    m_Position: {x: 0, y: 0}
+    m_TimeScale: 1
+    m_CycleOffset: 0
+    m_DirectBlendParameter: RunProgress
+    m_Mirror: 0
+  - serializedVersion: 2
+    m_Motion: {fileID: 3000241935436644503}
+    m_Threshold: 1
+    m_Position: {x: 0, y: 0}
+    m_TimeScale: 1
+    m_CycleOffset: 0
+    m_DirectBlendParameter: RunProgress
+    m_Mirror: 0
+  m_BlendParameter: Crouch
+  m_BlendParameterY: RunProgress
+  m_MinThreshold: 0
+  m_MaxThreshold: 1
+  m_UseAutomaticThresholds: 1
+  m_NormalizedBlendValues: 0
+  m_BlendType: 0
 --- !u!206 &4444868202897945715
 BlendTree:
   m_ObjectHideFlags: 1
@@ -329,8 +366,8 @@ AnimatorStateMachine:
   m_Name: Base Layer
   m_ChildStates:
   - serializedVersion: 1
-    m_State: {fileID: -8254548415936820478}
-    m_Position: {x: 290, y: 110, z: 0}
+    m_State: {fileID: -1878343542975894113}
+    m_Position: {x: 300, y: 120, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
@@ -340,4 +377,4 @@ AnimatorStateMachine:
   m_EntryPosition: {x: 50, y: 120, z: 0}
   m_ExitPosition: {x: 800, y: 120, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
-  m_DefaultState: {fileID: -8254548415936820478}
+  m_DefaultState: {fileID: -1878343542975894113}
