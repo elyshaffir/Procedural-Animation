@@ -19,9 +19,7 @@ namespace ProceduralAnimation
         Vector3 lastPosition;
         float floatStep;
         float runProgress;
-        float foot;
-        float movementProgressMultiplier = 1;
-        bool floatToSet = true;
+        float foot = 1;
 
         void Start()
         {
@@ -34,9 +32,8 @@ namespace ProceduralAnimation
         {
             if (momentumHandler.isGrounded())
             {
-                floatStep = (transform.position - lastPosition).magnitude / 3; // Currently, this is not affected by how far along the animaiton we are - and it should be            
-                animator.SetFloat(SpeedVariable, Mathf.Clamp01(momentumHandler.getSpeed()));
-                HandleMovementProgressMultiplier();
+                floatStep = (transform.position - lastPosition).magnitude / 5;
+                animator.SetFloat(SpeedVariable, Mathf.Clamp01(momentumHandler.getSpeed())); // To small                
                 SetMovementVariables();
             }
             lastPosition = transform.position;
@@ -44,44 +41,10 @@ namespace ProceduralAnimation
 
         private void SetMovementVariables()
         {
-            if (floatToSet)
-            {
-                SetRunProgress();
-            }
-            else
-            {
-                SetFoot();
-            }
-        }
-
-        void SetFoot()
-        {
-            foot += floatStep * movementProgressMultiplier;
-            foot = Mathf.Clamp01(foot);
-            if (foot == 1 || foot == 0)
-            {
-                floatToSet = true;
-            }
-            SetFloatInterpolated(FootVariable, foot);
-        }
-
-        void SetRunProgress()
-        {
-            runProgress += floatStep * movementProgressMultiplier;
-            runProgress = Mathf.Clamp01(runProgress);
-            if (runProgress == 1 || runProgress == 0)
-            {
-                floatToSet = false;
-            }
+            runProgress += floatStep;
             SetFloatInterpolated(RunProgressVariable, runProgress);
-        }
-
-        void HandleMovementProgressMultiplier()
-        {
-            if (Mathf.Abs(runProgress) == Mathf.Abs(foot))
-            {
-                movementProgressMultiplier *= -1;
-            }
+            foot += floatStep;
+            SetFloatInterpolated(FootVariable, foot);
         }
 
         void SetFloatInterpolated(string name, float value)
