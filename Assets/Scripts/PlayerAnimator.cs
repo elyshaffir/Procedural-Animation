@@ -9,17 +9,20 @@ namespace ProceduralAnimation
         private const string EffortVariable = "Effort";
         private const string SpeedVariable = "Speed";
         private const string RunProgressVariable = "RunProgress";
-        private const string FootVariable = "Foot";
+        private const string MovementSideVariable = "MovementSide";
+        private const string CrouchVariable = "Crouch";
+        private const float FloatStepDivider = 5;
+        private const float CrouchSpeed = 0.02f;
 
         public Animator animator;
-        public AnimationCurve curve;
+        public AnimationCurve smoothCurve;
 
         MomentumMovement momentumHandler;
 
         Vector3 lastPosition;
         float floatStep;
         float runProgress;
-        float foot = 1;
+        float movementSide = 1;
 
         void Start()
         {
@@ -30,26 +33,39 @@ namespace ProceduralAnimation
 
         void Update()
         {
-            if (momentumHandler.isGrounded())
+            if (momentumHandler.IsGrounded())
             {
-                floatStep = (transform.position - lastPosition).magnitude / 5;
-                animator.SetFloat(SpeedVariable, Mathf.Clamp01(momentumHandler.getSpeed())); // To small                
+                floatStep = (transform.position - lastPosition).magnitude / FloatStepDivider;
+                animator.SetFloat(SpeedVariable, Mathf.Clamp01(momentumHandler.GetSpeed()));
                 SetMovementVariables();
+                SetCrouchingVariables();
             }
             lastPosition = transform.position;
         }
 
-        private void SetMovementVariables()
+        void SetCrouchingVariables()
+        {
+            if (momentumHandler.IsCrouching())
+            {
+                animator.SetFloat(CrouchVariable, Mathf.Clamp01(animator.GetFloat(CrouchVariable) + CrouchSpeed));
+            }
+            else
+            {
+                animator.SetFloat(CrouchVariable, Mathf.Clamp01(animator.GetFloat(CrouchVariable) - CrouchSpeed));
+            }
+        }
+
+        void SetMovementVariables()
         {
             runProgress += floatStep;
             SetFloatInterpolated(RunProgressVariable, runProgress);
-            foot += floatStep;
-            SetFloatInterpolated(FootVariable, foot);
+            movementSide += floatStep;
+            SetFloatInterpolated(MovementSideVariable, movementSide);
         }
 
         void SetFloatInterpolated(string name, float value)
         {
-            animator.SetFloat(name, curve.Evaluate(value));
+            animator.SetFloat(name, smoothCurve.Evaluate(value));
         }
     }
 }

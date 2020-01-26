@@ -4,9 +4,11 @@ namespace ProceduralAnimation
 {
     class MomentumMovement : MonoBehaviour
     {
-        const float MovementSpeed = 1400f;
+        const float MovementSpeedStanding = 1000f;
+        const float MaxSpeedStanding = 20f;
+        const float MovementSpeedCrouched = 200f;
+        const float MaxSpeedCrouched = 5f;
         const float MaxGroundAngle = 50f;
-        const float MaxVelocity = 20f;
         const float SlowDownRate = 2;
         const float RotationSpeed = 5f;
         const float TiltAngle = 15f;
@@ -17,17 +19,25 @@ namespace ProceduralAnimation
 
         Rigidbody rb;
         bool grounded;
+        bool crouching;
+        float movementSpeed;
+        float maxMovementSpeed;
         float forceAngle;
         Vector3 movementForce;
 
-        public bool isGrounded()
+        public bool IsGrounded()
         {
             return grounded;
         }
 
-        public float getSpeed()
+        public bool IsCrouching()
         {
-            return rb.velocity.magnitude / 30;
+            return crouching;
+        }
+
+        public float GetSpeed()
+        {
+            return rb.velocity.magnitude / MaxSpeedStanding;
         }
 
         void Start()
@@ -37,7 +47,7 @@ namespace ProceduralAnimation
 
         void FixedUpdate()
         {
-            CalculateGrounded();
+            CalculateMovement();
             Move();
             RotateToVelocity();
             TiltToAcceleration();
@@ -45,27 +55,39 @@ namespace ProceduralAnimation
 
         Vector3 ScaleDirectionVector(Vector3 direction)
         {
-            return new Vector3(
-                direction.x,
-                0,
-                direction.z
-            ).normalized * MovementSpeed * Time.deltaTime;
+            return ToMovementSpeed(new Vector3(direction.x, 0, direction.z));
         }
 
-        void CalculateGrounded()
+        Vector3 ToMovementSpeed(Vector3 vector)
+        {
+            return vector.normalized * Time.deltaTime * movementSpeed;
+        }
+
+        void CalculateMovement()
         {
             RaycastHit hit;
             grounded = Physics.Raycast(transform.position, -Vector3.up, out hit, 2, ground);
             forceAngle = Vector3.Angle(hit.normal, Vector3.up);
             if (grounded)
             {
-                Vector3 extraForceDirection = Vector3.Cross(hit.normal, Vector3.Cross(CalculateMoveVector(), Vector3.up));
-                movementForce = extraForceDirection.normalized * MovementSpeed * Time.deltaTime;
+                Vector3 extraForceDirection = Vector3.Cross(hit.normal, Vector3.Cross(CalculateMovementVectors(), Vector3.up));
+                movementForce = ToMovementSpeed(extraForceDirection);
             }
         }
 
-        Vector3 CalculateMoveVector()
+        Vector3 CalculateMovementVectors()
         {
+            crouching = Input.GetKey(KeyCode.LeftShift);
+            if (crouching)
+            {
+                movementSpeed = MovementSpeedCrouched;
+                maxMovementSpeed = MaxSpeedCrouched;
+            }
+            else
+            {
+                movementSpeed = MovementSpeedStanding;
+                maxMovementSpeed = MaxSpeedStanding;
+            }
             Vector3 moveVector = ScaleDirectionVector(playerCamera.transform.forward) * Input.GetAxis("Vertical");
             moveVector += ScaleDirectionVector(playerCamera.transform.right) * Input.GetAxis("Horizontal");
             return moveVector;
@@ -81,7 +103,7 @@ namespace ProceduralAnimation
                     movementForce = -rb.velocity * SlowDownRate;
                 }
                 rb.AddForce(movementForce);
-                rb.velocity = Vector3.ClampMagnitude(rb.velocity, MaxVelocity);
+                rb.velocity = Vector3.ClampMagnitude(rb.velocity, maxMovementSpeed);
             }
         }
 
@@ -107,7 +129,7 @@ namespace ProceduralAnimation
         Vector3 CalculateTilt()
         {
             Vector3 tiltAxis = Vector3.Cross(movementForce, Vector3.up);
-            float angle = Mathf.Clamp(-movementForce.magnitude * getSpeed(), -TiltAngle, TiltAngle);
+            float angle = Mathf.Clamp(-movementForce.magnitude * GetSpeed(), -TiltAngle, TiltAngle);
             Quaternion targetRotation = Quaternion.AngleAxis(angle, tiltAxis) * transform.rotation;
             return targetRotation.eulerAngles;
         }

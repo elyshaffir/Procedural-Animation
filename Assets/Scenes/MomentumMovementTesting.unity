@@ -150,6 +150,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: idle
       objectReference: {fileID: 0}
+    - target: {fileID: -6057140222963153312, guid: a65e8181e1f498e4daaebced26182d86,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -6057140222963153312, guid: a65e8181e1f498e4daaebced26182d86,
+        type: 3}
+      propertyPath: m_Avatar
+      value: 
+      objectReference: {fileID: 9000000, guid: a65e8181e1f498e4daaebced26182d86, type: 3}
+    - target: {fileID: -6057140222963153312, guid: a65e8181e1f498e4daaebced26182d86,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: e9fac0c9da91d404c8407357008d6574, type: 2}
     - target: {fileID: -4216859302048453862, guid: a65e8181e1f498e4daaebced26182d86,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -220,21 +235,6 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 0.05
       objectReference: {fileID: 0}
-    - target: {fileID: -6057140222963153312, guid: a65e8181e1f498e4daaebced26182d86,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -6057140222963153312, guid: a65e8181e1f498e4daaebced26182d86,
-        type: 3}
-      propertyPath: m_Avatar
-      value: 
-      objectReference: {fileID: 9000000, guid: a65e8181e1f498e4daaebced26182d86, type: 3}
-    - target: {fileID: -6057140222963153312, guid: a65e8181e1f498e4daaebced26182d86,
-        type: 3}
-      propertyPath: m_Controller
-      value: 
-      objectReference: {fileID: 9100000, guid: e9fac0c9da91d404c8407357008d6574, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a65e8181e1f498e4daaebced26182d86, type: 3}
 --- !u!1 &458176021
@@ -778,8 +778,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: 0
-      value: 0
+      time: -0.25
+      value: -0.0000054612756
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -787,8 +787,26 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
+      time: 0
+      value: -0.0000014863908
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
       time: 1
-      value: 1.0000076
+      value: 1.0004883
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.1372068
+    - serializedVersion: 3
+      time: 1.25
+      value: 0.99999833
       inSlope: 0
       outSlope: 0
       tangentMode: 0
