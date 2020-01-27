@@ -23,10 +23,9 @@ namespace ProceduralAnimation
 
         MomentumMovement momentumHandler;
 
-        Vector3 lastPosition;
         float floatStep;
         float forward;
-        float movementSide = 1;
+        float side = 1;
         float down;
         float currentDownVelocity;
         float targetDown;
@@ -34,25 +33,25 @@ namespace ProceduralAnimation
         void Start()
         {
             momentumHandler = GetComponent<MomentumMovement>();
-            lastPosition = transform.position;
             animator.SetFloat(EffortVariable, 0.7f);
         }
 
         void FixedUpdate()
         {
+            animator.SetBool("Grounded", momentumHandler.IsGrounded());
             if (momentumHandler.IsGrounded())
             {
-                floatStep = (transform.position - lastPosition).magnitude / FloatStepDivider;
-                animator.SetFloat(SpeedVariable, Mathf.Clamp01(momentumHandler.GetSpeed()));
+                floatStep = momentumHandler.GetHorizontalSpeed() / FloatStepDivider;
+                animator.SetFloat(SpeedVariable, Mathf.Clamp01(momentumHandler.GetHorizontalSpeed()));
                 SetMovementVariables();
-                SetDownVariables();
             }
-            lastPosition = transform.position;
+            SetDownVariables();
         }
 
         void SetDownVariables()
         {
-            targetDown = momentumHandler.IsCrouching() ? 1 - DownTargetMargin : DownTargetMargin;
+            targetDown = momentumHandler.IsCrouching() ? 1 - DownTargetMargin : DownTargetMargin - momentumHandler.GetVerticalSpeed(); // this can exceed the limits            
+            targetDown = Mathf.Clamp01(targetDown);
             float dampingFactor = 1 - DownDamping * Time.fixedDeltaTime;
             float acceleration = (targetDown - down) * DownStiffness * Time.fixedDeltaTime;
             currentDownVelocity = currentDownVelocity * dampingFactor + acceleration;
@@ -70,8 +69,8 @@ namespace ProceduralAnimation
         {
             forward += floatStep;
             SetFloatSmooth(ForwardVariable, forward);
-            movementSide += floatStep;
-            SetFloatSmooth(MovementSideVariable, movementSide);
+            side += floatStep;
+            SetFloatSmooth(MovementSideVariable, side);
         }
 
         void SetFloatSmooth(string name, float value)

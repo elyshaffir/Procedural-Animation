@@ -37,9 +37,15 @@ namespace ProceduralAnimation
             return crouching;
         }
 
-        public float GetSpeed()
+        public float GetHorizontalSpeed()
         {
-            return rb.velocity.magnitude / MaxSpeedRunning; // This should include rotation as well
+            Vector3 horizontalVelocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+            return horizontalVelocity.magnitude / MaxSpeedRunning; // This should include rotation as well
+        }
+
+        public float GetVerticalSpeed()
+        {
+            return rb.velocity.y;
         }
 
         void Start()
@@ -68,12 +74,13 @@ namespace ProceduralAnimation
         void CalculateMovement()
         {
             RaycastHit hit;
-            grounded = Physics.Raycast(transform.position, -Vector3.up, out hit, 2, ground);
+            grounded = Physics.Raycast(transform.position, -Vector3.up, out hit, 1.5f, ground);
             forceAngle = Vector3.Angle(hit.normal, Vector3.up);
             if (grounded)
             {
-                Vector3 extraForceDirection = Vector3.Cross(hit.normal, Vector3.Cross(CalculateMovementVectors(), Vector3.up));
-                movementForce = ToMovementSpeed(extraForceDirection);
+                Vector3 movementOnSurface = Vector3.Cross(hit.normal, Vector3.Cross(CalculateMovementVectors(), Vector3.up));
+                Vector3 verticalMovement = Vector3.zero;
+                movementForce = ToMovementSpeed(movementOnSurface + verticalMovement);
             }
         }
 
@@ -107,7 +114,7 @@ namespace ProceduralAnimation
                     targetMaxSpeed = MaxSpeedWalking;
                 }
             }
-            maxMovementSpeed = Mathf.Lerp(maxMovementSpeed, targetMaxSpeed, .1f);
+            maxMovementSpeed = Mathf.Lerp(maxMovementSpeed, targetMaxSpeed, 0.1f);
         }
 
         void Move()
@@ -119,6 +126,11 @@ namespace ProceduralAnimation
                     movementForce = -rb.velocity * SlowDownRate;
                 }
                 rb.AddForce(movementForce);
+                if (Input.GetKey(KeyCode.Space))
+                {
+                    Debug.Log("a");
+                    rb.AddForce(Vector3.up * 50);
+                }
                 rb.velocity = Vector3.ClampMagnitude(rb.velocity, maxMovementSpeed);
             }
         }
@@ -145,7 +157,7 @@ namespace ProceduralAnimation
         Vector3 CalculateTilt()
         {
             Vector3 tiltAxis = Vector3.Cross(movementForce, Vector3.up);
-            float angle = Mathf.Clamp(-movementForce.magnitude * GetSpeed(), -TiltAngle, TiltAngle);
+            float angle = Mathf.Clamp(-movementForce.magnitude * GetHorizontalSpeed(), -TiltAngle, TiltAngle);
             Quaternion targetRotation = Quaternion.AngleAxis(angle, tiltAxis) * transform.rotation;
             return targetRotation.eulerAngles;
         }

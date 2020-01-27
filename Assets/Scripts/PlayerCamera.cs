@@ -5,6 +5,7 @@ namespace ProceduralAnimation
     class PlayerCamera : MonoBehaviour
     {
         public GameObject player;
+        public LayerMask solidObjects;
 
         const float HorizontalSpeed = 100.0f;
         const float VerticalSpeed = 100.0f;
@@ -12,8 +13,6 @@ namespace ProceduralAnimation
         const float MaxPitch = 90;
         const float DistanceFromCamera = 3.75f;
         const float YOffset = 0f;
-
-        public LayerMask solidObjects;
 
         CursorLockMode wantedMode;
         bool mouseActive;
