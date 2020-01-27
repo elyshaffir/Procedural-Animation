@@ -128,7 +128,6 @@ namespace ProceduralAnimation
                 rb.AddForce(movementForce);
                 if (Input.GetKey(KeyCode.Space))
                 {
-                    Debug.Log("a");
                     rb.AddForce(Vector3.up * 50);
                 }
                 rb.velocity = Vector3.ClampMagnitude(rb.velocity, maxMovementSpeed);

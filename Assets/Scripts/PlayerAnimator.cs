@@ -11,6 +11,7 @@ namespace ProceduralAnimation
         const string ForwardVariable = "Forward";
         const string MovementSideVariable = "Side";
         const string DownVariable = "Down";
+        const float AirTimeStep = 0.1f;
         const float FloatStepDivider = 5f;
         const float DownTargetMargin = .2f;
         const float DownStiffness = 50f;
@@ -23,6 +24,8 @@ namespace ProceduralAnimation
 
         MomentumMovement momentumHandler;
 
+
+        float airTime;
         float floatStep;
         float forward;
         float side = 1;
@@ -36,21 +39,27 @@ namespace ProceduralAnimation
             animator.SetFloat(EffortVariable, 0.7f);
         }
 
-        void FixedUpdate()
+        void Update()
         {
-            animator.SetBool("Grounded", momentumHandler.IsGrounded());
             if (momentumHandler.IsGrounded())
             {
+                airTime = Mathf.Lerp(airTime, 0, AirTimeStep);
                 floatStep = momentumHandler.GetHorizontalSpeed() / FloatStepDivider;
                 animator.SetFloat(SpeedVariable, Mathf.Clamp01(momentumHandler.GetHorizontalSpeed()));
                 SetMovementVariables();
+            }
+            else
+            {
+                airTime += AirTimeStep;
+                airTime = Mathf.Clamp01(airTime);
             }
             SetDownVariables();
         }
 
         void SetDownVariables()
         {
-            targetDown = momentumHandler.IsCrouching() ? 1 - DownTargetMargin : DownTargetMargin - momentumHandler.GetVerticalSpeed(); // this can exceed the limits            
+            animator.SetFloat("AirTime", airTime);
+            targetDown = momentumHandler.IsCrouching() ? 1 - DownTargetMargin : DownTargetMargin - momentumHandler.GetVerticalSpeed(); // this can exceed the limits                        
             targetDown = Mathf.Clamp01(targetDown);
             float dampingFactor = 1 - DownDamping * Time.fixedDeltaTime;
             float acceleration = (targetDown - down) * DownStiffness * Time.fixedDeltaTime;
