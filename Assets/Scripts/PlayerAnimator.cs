@@ -50,6 +50,7 @@ namespace ProceduralAnimation
             }
             else
             {
+                animator.SetFloat(SpeedVariable, Mathf.Clamp01(momentumHandler.GetHorizontalSpeed()));
                 airTime += AirTimeStep;
                 airTime = Mathf.Clamp01(airTime);
             }
@@ -59,7 +60,14 @@ namespace ProceduralAnimation
         void SetDownVariables()
         {
             animator.SetFloat("AirTime", airTime);
-            targetDown = momentumHandler.IsCrouching() ? 1 - DownTargetMargin : DownTargetMargin - momentumHandler.GetVerticalSpeed(); // this can exceed the limits                        
+            if (momentumHandler.IsCrouching())
+            {
+                targetDown = 1 - DownTargetMargin;
+            }
+            else
+            {
+                targetDown = DownTargetMargin - momentumHandler.GetVerticalSpeed() / 7;
+            }
             targetDown = Mathf.Clamp01(targetDown);
             float dampingFactor = 1 - DownDamping * Time.fixedDeltaTime;
             float acceleration = (targetDown - down) * DownStiffness * Time.fixedDeltaTime;
