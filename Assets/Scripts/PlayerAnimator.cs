@@ -6,13 +6,17 @@ namespace ProceduralAnimation
     class PlayerAnimator : MonoBehaviour
     {
 
-        private const string EffortVariable = "Effort";
-        private const string SpeedVariable = "Speed";
-        private const string RunProgressVariable = "RunProgress";
-        private const string MovementSideVariable = "MovementSide";
-        private const string CrouchVariable = "Crouch";
-        private const float FloatStepDivider = 5;
-        private const float CrouchSpeed = 0.02f;
+        const string EffortVariable = "Effort";
+        const string SpeedVariable = "Speed";
+        const string ForwardVariable = "Forward";
+        const string MovementSideVariable = "Side";
+        const string DownVariable = "Down";
+        const float FloatStepDivider = 5f;
+        const float DownTargetMargin = .2f;
+        const float DownStiffness = 50f;
+        const float DownDamping = 6f;
+        const float DownThreshold = 0.01f;
+        const float DownVelocityThreshold = 0.01f;
 
         public Animator animator;
         public AnimationCurve smoothCurve;
@@ -21,8 +25,11 @@ namespace ProceduralAnimation
 
         Vector3 lastPosition;
         float floatStep;
-        float runProgress;
+        float forward;
         float movementSide = 1;
+        float down;
+        float currentDownVelocity;
+        float targetDown;
 
         void Start()
         {
@@ -31,39 +38,43 @@ namespace ProceduralAnimation
             animator.SetFloat(EffortVariable, 0.7f);
         }
 
-        void Update()
+        void FixedUpdate()
         {
             if (momentumHandler.IsGrounded())
             {
                 floatStep = (transform.position - lastPosition).magnitude / FloatStepDivider;
                 animator.SetFloat(SpeedVariable, Mathf.Clamp01(momentumHandler.GetSpeed()));
                 SetMovementVariables();
-                SetCrouchingVariables();
+                SetDownVariables();
             }
             lastPosition = transform.position;
         }
 
-        void SetCrouchingVariables()
+        void SetDownVariables()
         {
-            if (momentumHandler.IsCrouching())
+            targetDown = momentumHandler.IsCrouching() ? 1 - DownTargetMargin : DownTargetMargin;
+            float dampingFactor = 1 - DownDamping * Time.fixedDeltaTime;
+            float acceleration = (targetDown - down) * DownStiffness * Time.fixedDeltaTime;
+            currentDownVelocity = currentDownVelocity * dampingFactor + acceleration;
+            down += currentDownVelocity * Time.fixedDeltaTime;
+
+            if (Mathf.Abs(down - targetDown) < DownThreshold && Mathf.Abs(currentDownVelocity) < DownVelocityThreshold)
             {
-                animator.SetFloat(CrouchVariable, Mathf.Clamp01(animator.GetFloat(CrouchVariable) + CrouchSpeed));
+                down = targetDown;
+                currentDownVelocity = 0f;
             }
-            else
-            {
-                animator.SetFloat(CrouchVariable, Mathf.Clamp01(animator.GetFloat(CrouchVariable) - CrouchSpeed));
-            }
+            animator.SetFloat(DownVariable, down);
         }
 
         void SetMovementVariables()
         {
-            runProgress += floatStep;
-            SetFloatInterpolated(RunProgressVariable, runProgress);
+            forward += floatStep;
+            SetFloatSmooth(ForwardVariable, forward);
             movementSide += floatStep;
-            SetFloatInterpolated(MovementSideVariable, movementSide);
+            SetFloatSmooth(MovementSideVariable, movementSide);
         }
 
-        void SetFloatInterpolated(string name, float value)
+        void SetFloatSmooth(string name, float value)
         {
             animator.SetFloat(name, smoothCurve.Evaluate(value));
         }
