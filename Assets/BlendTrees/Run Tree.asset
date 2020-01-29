@@ -44,8 +44,8 @@ BlendTree:
     m_CycleOffset: 0.5
     m_DirectBlendParameter: RunProgress
     m_Mirror: 1
-  m_BlendParameter: Forward
-  m_BlendParameterY: Side
+  m_BlendParameter: RunProgress
+  m_BlendParameterY: RunFlip
   m_MinThreshold: 0
   m_MaxThreshold: 0.5625
   m_UseAutomaticThresholds: 1

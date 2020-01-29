@@ -48,6 +48,12 @@ namespace ProceduralAnimation
             return rb.velocity.y;
         }
 
+        public float[] GetRollVariables()
+        {
+            float forward = Mathf.Cos(Vector3.Angle(moveVector, transform.rotation.eulerAngles));
+            return new float[] { -forward * rollProgress, (1 + forward) * rollProgress, rollProgress };
+        }
+
         void Start()
         {
             rb = GetComponent<Rigidbody>();
@@ -55,6 +61,7 @@ namespace ProceduralAnimation
 
         void FixedUpdate()
         {
+            CalculateMovementVectors();
             CalculateMovement();
             Move();
             RotateToVelocity();
@@ -78,18 +85,17 @@ namespace ProceduralAnimation
             forceAngle = Vector3.Angle(hit.normal, Vector3.up);
             if (grounded)
             {
-                Vector3 movementOnSurface = Vector3.Cross(hit.normal, Vector3.Cross(CalculateMovementVectors(), Vector3.up));
+                Vector3 movementOnSurface = Vector3.Cross(hit.normal, Vector3.Cross(moveVector, Vector3.up));
                 Vector3 verticalMovement = Vector3.zero;
                 movementForce = ToMovementSpeed(movementOnSurface + verticalMovement);
             }
         }
 
-        Vector3 CalculateMovementVectors()
+        void CalculateMovementVectors()
         {
             HandleSpeeds();
-            Vector3 moveVector = ScaleDirectionVector(playerCamera.transform.forward) * Input.GetAxis("Vertical");
+            moveVector = ScaleDirectionVector(playerCamera.transform.forward) * Input.GetAxis("Vertical");
             moveVector += ScaleDirectionVector(playerCamera.transform.right) * Input.GetAxis("Horizontal");
-            return moveVector;
         }
 
         void HandleSpeeds()
@@ -117,20 +123,55 @@ namespace ProceduralAnimation
             maxMovementSpeed = Mathf.Lerp(maxMovementSpeed, targetMaxSpeed, 0.1f);
         }
 
+        Vector3 moveVector;
+        bool preparingRoll = false;
+        bool rolling = false;
+        Vector3 rotationAxis;
+        float rollProgress;
+
         void Move()
         {
-            if (grounded && forceAngle < MaxGroundAngle)
+            if (preparingRoll)
             {
-                if (movementForce == Vector3.zero)
+                rollProgress += .05f;
+                if (rollProgress >= 1)
                 {
-                    movementForce = -rb.velocity * SlowDownRate;
+                    rollProgress = 1;
+                    rolling = true;
+                    preparingRoll = false;
                 }
-                rb.AddForce(movementForce);
-                if (Input.GetKey(KeyCode.Space))
+            }
+            else if (rolling)
+            {
+                rollProgress -= .05f;
+                playerModel.transform.Rotate(rotationAxis, 360 * .05f, Space.World);
+                if (rollProgress <= 0)
+                { // check removing <
+                    rollProgress = 0;
+                    rolling = false;
+                }
+            }
+            else
+            {
+                if (grounded && forceAngle < MaxGroundAngle)
                 {
-                    rb.AddForce(Vector3.up * 50);
+                    if (movementForce == Vector3.zero)
+                    {
+                        movementForce = -rb.velocity * SlowDownRate;
+                    }
+                    rb.AddForce(movementForce);
+                    if (Input.GetKey(KeyCode.Space))
+                    {
+                        rb.AddForce(Vector3.up * 50);
+                    }
+                    rb.velocity = Vector3.ClampMagnitude(rb.velocity, maxMovementSpeed);
                 }
-                rb.velocity = Vector3.ClampMagnitude(rb.velocity, maxMovementSpeed);
+                if (Input.GetKey(KeyCode.LeftAlt))
+                {
+                    rb.AddForce(moveVector.normalized * 10, ForceMode.Impulse);
+                    preparingRoll = true;
+                    rotationAxis = Vector3.Cross(Vector3.up, moveVector);
+                }
             }
         }
 
@@ -148,9 +189,12 @@ namespace ProceduralAnimation
 
         void TiltToAcceleration()
         {
-            Vector3 tilt = CalculateTilt();
-            Quaternion targetRotation = Quaternion.Euler(tilt);
-            playerModel.transform.rotation = Quaternion.Lerp(playerModel.transform.rotation, targetRotation, RotationSpeed * Time.deltaTime);
+            if (!rolling)
+            {
+                Vector3 tilt = CalculateTilt();
+                Quaternion targetRotation = Quaternion.Euler(tilt);
+                playerModel.transform.rotation = Quaternion.Lerp(playerModel.transform.rotation, targetRotation, RotationSpeed * Time.deltaTime);
+            }
         }
 
         Vector3 CalculateTilt()

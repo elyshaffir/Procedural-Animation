@@ -8,8 +8,8 @@ namespace ProceduralAnimation
 
         const string EffortVariable = "Effort";
         const string SpeedVariable = "Speed";
-        const string ForwardVariable = "Forward";
-        const string MovementSideVariable = "Side";
+        const string RunProgressVariable = "RunProgress";
+        const string MovementRunFlipVariable = "RunFlip";
         const string DownVariable = "Down";
         const float AirTimeStep = 0.1f;
         const float FloatStepDivider = 5f;
@@ -27,8 +27,8 @@ namespace ProceduralAnimation
 
         float airTime;
         float floatStep;
-        float forward;
-        float side = 1;
+        float runprogress;
+        float runflip = 1;
         float down;
         float currentDownVelocity;
         float targetDown;
@@ -55,6 +55,7 @@ namespace ProceduralAnimation
                 airTime = Mathf.Clamp01(airTime);
             }
             SetDownVariables();
+            SetRollVariables();
         }
 
         void SetDownVariables()
@@ -66,7 +67,7 @@ namespace ProceduralAnimation
             }
             else
             {
-                targetDown = DownTargetMargin - momentumHandler.GetVerticalSpeed() / 7;
+                targetDown = DownTargetMargin - momentumHandler.GetVerticalSpeed();
             }
             targetDown = Mathf.Clamp01(targetDown);
             float dampingFactor = 1 - DownDamping * Time.fixedDeltaTime;
@@ -82,12 +83,20 @@ namespace ProceduralAnimation
             animator.SetFloat(DownVariable, down);
         }
 
+        void SetRollVariables()
+        {
+            float[] rollVariables = momentumHandler.GetRollVariables();
+            animator.SetFloat("Forward", rollVariables[0]);
+            animator.SetFloat("Right", rollVariables[1]);
+            animator.SetFloat("RollTime", rollVariables[2]);
+        }
+
         void SetMovementVariables()
         {
-            forward += floatStep;
-            SetFloatSmooth(ForwardVariable, forward);
-            side += floatStep;
-            SetFloatSmooth(MovementSideVariable, side);
+            runprogress += floatStep;
+            SetFloatSmooth(RunProgressVariable, runprogress);
+            runflip += floatStep;
+            SetFloatSmooth(MovementRunFlipVariable, runflip);
         }
 
         void SetFloatSmooth(string name, float value)
