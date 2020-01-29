@@ -11,6 +11,11 @@ namespace ProceduralAnimation
         const string RunProgressVariable = "RunProgress";
         const string MovementRunFlipVariable = "RunFlip";
         const string DownVariable = "Down";
+        const string AirTimeVariable = "AirTime";
+        const string ForwardVariable = "Forward";
+        const string RightVariable = "Right";
+        const string RollTimeVariable = "RollTime";
+
         const float AirTimeStep = 0.1f;
         const float FloatStepDivider = 5f;
         const float DownTargetMargin = .2f;
@@ -24,7 +29,6 @@ namespace ProceduralAnimation
 
         MomentumMovement momentumHandler;
 
-
         float airTime;
         float floatStep;
         float runprogress;
@@ -32,21 +36,41 @@ namespace ProceduralAnimation
         float down;
         float currentDownVelocity;
         float targetDown;
+        float effort = 0.7f;
+        float effortDifference = 0.01f;
 
         void Start()
         {
             momentumHandler = GetComponent<MomentumMovement>();
-            animator.SetFloat(EffortVariable, 0.7f);
         }
 
         void Update()
+        {
+            SetAirTime();
+            SetDown();
+            SetRoll();
+            SetMovement();
+            SetIdle();
+        }
+
+        void SetIdle()
+        {
+            effort += effortDifference;
+            if (effort >= 1 || effort <= 0.7f)
+            {
+                effort = Mathf.Round(effort * 10) / 10;
+                effortDifference *= -1;
+            }
+            animator.SetFloat(EffortVariable, effort);
+        }
+
+        void SetAirTime()
         {
             if (momentumHandler.IsGrounded())
             {
                 airTime = Mathf.Lerp(airTime, 0, AirTimeStep);
                 floatStep = momentumHandler.GetHorizontalSpeed() / FloatStepDivider;
                 animator.SetFloat(SpeedVariable, Mathf.Clamp01(momentumHandler.GetHorizontalSpeed()));
-                SetMovementVariables();
             }
             else
             {
@@ -54,13 +78,11 @@ namespace ProceduralAnimation
                 airTime += AirTimeStep;
                 airTime = Mathf.Clamp01(airTime);
             }
-            SetDownVariables();
-            SetRollVariables();
+            animator.SetFloat(AirTimeVariable, airTime);
         }
 
-        void SetDownVariables()
+        void SetDown()
         {
-            animator.SetFloat("AirTime", airTime);
             if (momentumHandler.IsCrouching())
             {
                 targetDown = 1 - DownTargetMargin;
@@ -83,20 +105,23 @@ namespace ProceduralAnimation
             animator.SetFloat(DownVariable, down);
         }
 
-        void SetRollVariables()
+        void SetRoll()
         {
             float[] rollVariables = momentumHandler.GetRollVariables();
-            animator.SetFloat("Forward", rollVariables[0]);
-            animator.SetFloat("Right", rollVariables[1]);
-            animator.SetFloat("RollTime", rollVariables[2]);
+            animator.SetFloat(ForwardVariable, rollVariables[0]);
+            animator.SetFloat(RightVariable, rollVariables[1]);
+            animator.SetFloat(RollTimeVariable, rollVariables[2]);
         }
 
-        void SetMovementVariables()
+        void SetMovement()
         {
-            runprogress += floatStep;
-            SetFloatSmooth(RunProgressVariable, runprogress);
-            runflip += floatStep;
-            SetFloatSmooth(MovementRunFlipVariable, runflip);
+            if (momentumHandler.IsGrounded())
+            {
+                runprogress += floatStep;
+                SetFloatSmooth(RunProgressVariable, runprogress);
+                runflip += floatStep;
+                SetFloatSmooth(MovementRunFlipVariable, runflip);
+            }
         }
 
         void SetFloatSmooth(string name, float value)

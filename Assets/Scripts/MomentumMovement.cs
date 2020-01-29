@@ -14,6 +14,9 @@ namespace ProceduralAnimation
         const float SlowDownRate = 2;
         const float RotationSpeed = 5f;
         const float TiltAngle = 15f;
+        const float JumpForce = 50f;
+        const float RollForce = 10f;
+        const float RollSpeed = 0.05f;
 
         public GameObject playerCamera;
         public GameObject playerModel;
@@ -26,6 +29,11 @@ namespace ProceduralAnimation
         float maxMovementSpeed;
         float forceAngle;
         Vector3 movementForce;
+        Vector3 moveVector;
+        bool preparingRoll = false;
+        bool rolling = false;
+        Vector3 rotationAxis;
+        float rollProgress;
 
         public bool IsGrounded()
         {
@@ -50,8 +58,9 @@ namespace ProceduralAnimation
 
         public float[] GetRollVariables()
         {
-            float forward = Mathf.Cos(Vector3.Angle(moveVector, transform.rotation.eulerAngles));
-            return new float[] { -forward * rollProgress, (1 + forward) * rollProgress, rollProgress };
+            float forward = Mathf.Cos(Mathf.Deg2Rad * Vector3.Angle(moveVector, transform.forward));
+            float right = Mathf.Cos(Mathf.Deg2Rad * Vector3.Angle(moveVector, transform.right));
+            return new float[] { forward * rollProgress, right * rollProgress, rollProgress };
         }
 
         void Start()
@@ -123,33 +132,15 @@ namespace ProceduralAnimation
             maxMovementSpeed = Mathf.Lerp(maxMovementSpeed, targetMaxSpeed, 0.1f);
         }
 
-        Vector3 moveVector;
-        bool preparingRoll = false;
-        bool rolling = false;
-        Vector3 rotationAxis;
-        float rollProgress;
-
         void Move()
         {
             if (preparingRoll)
             {
-                rollProgress += .05f;
-                if (rollProgress >= 1)
-                {
-                    rollProgress = 1;
-                    rolling = true;
-                    preparingRoll = false;
-                }
+                PrepareToRoll();
             }
             else if (rolling)
             {
-                rollProgress -= .05f;
-                playerModel.transform.Rotate(rotationAxis, 360 * .05f, Space.World);
-                if (rollProgress <= 0)
-                { // check removing <
-                    rollProgress = 0;
-                    rolling = false;
-                }
+                Roll();
             }
             else
             {
@@ -162,16 +153,38 @@ namespace ProceduralAnimation
                     rb.AddForce(movementForce);
                     if (Input.GetKey(KeyCode.Space))
                     {
-                        rb.AddForce(Vector3.up * 50);
+                        rb.AddForce(Vector3.up * JumpForce);
                     }
                     rb.velocity = Vector3.ClampMagnitude(rb.velocity, maxMovementSpeed);
                 }
                 if (Input.GetKey(KeyCode.LeftAlt))
                 {
-                    rb.AddForce(moveVector.normalized * 10, ForceMode.Impulse);
+                    rb.AddForce(moveVector.normalized * RollForce, ForceMode.Impulse);
                     preparingRoll = true;
                     rotationAxis = Vector3.Cross(Vector3.up, moveVector);
                 }
+            }
+        }
+
+        void Roll()
+        {
+            rollProgress -= RollSpeed;
+            playerModel.transform.Rotate(rotationAxis, 360 * RollSpeed, Space.World);
+            if (rollProgress <= 0)
+            {
+                rollProgress = 0;
+                rolling = false;
+            }
+        }
+
+        void PrepareToRoll()
+        {
+            rollProgress += RollSpeed;
+            if (rollProgress >= 1)
+            {
+                rollProgress = 1;
+                rolling = true;
+                preparingRoll = false;
             }
         }
 
