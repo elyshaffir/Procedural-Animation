@@ -9,7 +9,7 @@ BlendTree:
   m_Name: Roll Tree
   m_Childs:
   - serializedVersion: 2
-    m_Motion: {fileID: -2463781497245029270, guid: 907dd74e84f6f5346a083b2bc13e363d,
+    m_Motion: {fileID: -780883301780422080, guid: 7c8a9c75f6818ef40b5a85d271050299,
       type: 3}
     m_Threshold: 0
     m_Position: {x: -1, y: 0}
@@ -18,7 +18,7 @@ BlendTree:
     m_DirectBlendParameter: RunProgress
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: -887982601649841707, guid: bce145eb1f5056b468f29a3341963524,
+    m_Motion: {fileID: 3074395946462694631, guid: 7c8a9c75f6818ef40b5a85d271050299,
       type: 3}
     m_Threshold: 0.33333334
     m_Position: {x: 1, y: 0}
@@ -27,7 +27,7 @@ BlendTree:
     m_DirectBlendParameter: RunProgress
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: -887982601649841707, guid: c7f262facaba10f4a841909ac962203c,
+    m_Motion: {fileID: 2146308686119742444, guid: 7c8a9c75f6818ef40b5a85d271050299,
       type: 3}
     m_Threshold: 0.6666667
     m_Position: {x: 0, y: -1}
@@ -36,14 +36,14 @@ BlendTree:
     m_DirectBlendParameter: RunProgress
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: -887982601649841707, guid: d28e2d446847e0343a04a387ac6662c0,
+    m_Motion: {fileID: 2146308686119742444, guid: 7c8a9c75f6818ef40b5a85d271050299,
       type: 3}
     m_Threshold: 1
     m_Position: {x: 0, y: 1}
     m_TimeScale: 1
-    m_CycleOffset: 0
+    m_CycleOffset: 0.5
     m_DirectBlendParameter: RunProgress
-    m_Mirror: 0
+    m_Mirror: 1
   m_BlendParameter: Forward
   m_BlendParameterY: Right
   m_MinThreshold: 0

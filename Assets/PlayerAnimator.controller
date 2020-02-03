@@ -239,7 +239,7 @@ AnimatorController:
     m_BlendingMode: 0
     m_SyncedLayerIndex: -1
     m_DefaultWeight: 0
-    m_IKPass: 0
+    m_IKPass: 1
     m_SyncedLayerAffectsTiming: 0
     m_Controller: {fileID: 9100000}
 --- !u!206 &1294381161114083198
@@ -344,7 +344,7 @@ BlendTree:
   m_Name: Idle Tree
   m_Childs:
   - serializedVersion: 2
-    m_Motion: {fileID: -887982601649841707, guid: 9a7551341ecba744e85a9dec5ea2694d,
+    m_Motion: {fileID: -8011878862328673026, guid: 7c8a9c75f6818ef40b5a85d271050299,
       type: 3}
     m_Threshold: 0
     m_Position: {x: 0, y: 0}
@@ -353,7 +353,7 @@ BlendTree:
     m_DirectBlendParameter: RunProgress
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: -887982601649841707, guid: f8ced878b38085442991c192feb4d6e4,
+    m_Motion: {fileID: 6869581237962280435, guid: 7c8a9c75f6818ef40b5a85d271050299,
       type: 3}
     m_Threshold: 1
     m_Position: {x: 0, y: 0}
@@ -426,7 +426,7 @@ BlendTree:
   m_Name: Crouch Walk Tree
   m_Childs:
   - serializedVersion: 2
-    m_Motion: {fileID: -887982601649841707, guid: 9e30ec11efdc02e45b6b2fdb466a7914,
+    m_Motion: {fileID: 9096645506270238865, guid: 7c8a9c75f6818ef40b5a85d271050299,
       type: 3}
     m_Threshold: 0
     m_Position: {x: 1, y: 1}
@@ -435,7 +435,7 @@ BlendTree:
     m_DirectBlendParameter: RunProgress
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: -7536546058115350168, guid: cf46184764fa14e4b965b2406c64c52b,
+    m_Motion: {fileID: -5467851649932847394, guid: 7c8a9c75f6818ef40b5a85d271050299,
       type: 3}
     m_Threshold: 0.33333334
     m_Position: {x: 1, y: 0}
@@ -444,23 +444,23 @@ BlendTree:
     m_DirectBlendParameter: RunProgress
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: -887982601649841707, guid: 1ba6a3b382265fa40a1ec49b72ffa4f7,
+    m_Motion: {fileID: 9096645506270238865, guid: 7c8a9c75f6818ef40b5a85d271050299,
       type: 3}
     m_Threshold: 0.6666667
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
-    m_CycleOffset: 0
+    m_CycleOffset: 0.5
     m_DirectBlendParameter: RunProgress
-    m_Mirror: 0
+    m_Mirror: 1
   - serializedVersion: 2
-    m_Motion: {fileID: -2463781497245029270, guid: d7ac450a0b57a8445a904d73bc42370e,
+    m_Motion: {fileID: -5467851649932847394, guid: 7c8a9c75f6818ef40b5a85d271050299,
       type: 3}
     m_Threshold: 1
     m_Position: {x: 0, y: 1}
     m_TimeScale: 1
-    m_CycleOffset: 0
+    m_CycleOffset: 0.5
     m_DirectBlendParameter: RunProgress
-    m_Mirror: 0
+    m_Mirror: 1
   m_BlendParameter: RunProgress
   m_BlendParameterY: RunFlip
   m_MinThreshold: 0
@@ -595,7 +595,7 @@ BlendTree:
   m_Name: Air Move Tree
   m_Childs:
   - serializedVersion: 2
-    m_Motion: {fileID: -887982601649841707, guid: e94042d0ed850874db104daa0bfb6733,
+    m_Motion: {fileID: 2221424790427038968, guid: 7c8a9c75f6818ef40b5a85d271050299,
       type: 3}
     m_Threshold: 0
     m_Position: {x: 0, y: 0}
@@ -604,7 +604,7 @@ BlendTree:
     m_DirectBlendParameter: Forward
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: -887982601649841707, guid: 5aa34c08848066547add15e35be7682f,
+    m_Motion: {fileID: -1894007269658668327, guid: 7c8a9c75f6818ef40b5a85d271050299,
       type: 3}
     m_Threshold: 1
     m_Position: {x: 0, y: 0}

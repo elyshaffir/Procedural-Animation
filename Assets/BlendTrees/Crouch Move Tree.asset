@@ -9,7 +9,7 @@ BlendTree:
   m_Name: Crouch Move Tree
   m_Childs:
   - serializedVersion: 2
-    m_Motion: {fileID: -887982601649841707, guid: 4739f6a07c78d754986e6472a979db4f,
+    m_Motion: {fileID: 1751142522249580271, guid: 7c8a9c75f6818ef40b5a85d271050299,
       type: 3}
     m_Threshold: 0
     m_Position: {x: 0, y: 0}
