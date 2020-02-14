@@ -16,7 +16,7 @@ public class FABRIKEffector : MonoBehaviour
 
     [HideInInspector]
     public float twistConstraint = float.NaN;
-    
+
     private FABRIKEffector parent = null;
 
     private Vector3 position;
@@ -114,7 +114,7 @@ public class FABRIKEffector : MonoBehaviour
 
                 // Decompose our local rotation to swing-twist about the forward vector of the constraining rotation
                 rotation_local.Decompose(Vector3.forward, out swing, out twist);
-                
+
                 // Constrain the swing and twist quaternions
                 if (SwingConstrained)
                 {
@@ -156,39 +156,46 @@ public class FABRIKEffector : MonoBehaviour
 
     private void DebugDrawBounds()
     {
-        MeshFilter meshFilter = gameObject.GetComponent<MeshFilter>();
+        Debug.DrawLine(parent.position, GetComponentInChildren<FABRIKEffector>().position);
+        // MeshFilter meshFilter = gameObject.GetComponent<MeshFilter>();
 
-        if (meshFilter == null)
-        {
-            return;
-        }
+        // if (meshFilter == null)
+        // {
+        //     return;
+        // }
 
-        Bounds bounds = meshFilter.mesh.bounds;
+        // Bounds bounds = meshFilter.mesh.bounds; // Shouldn't be calculated like this, wtf, should be distance from object to its parent (that is the size of the object)
+        // Later, copy those bounds to the designated location at FABRIK.cs
 
-        Vector3[] vertices = new Vector3[8];
+        // Bounds bounds = new Bounds(transform.position, parent.transform.position - transform.position);
+        // Debug.Log(name + ": " + transform.position + ", " + parent.name + ": " + parent.transform.position + ", " + (parent.transform.position - transform.position));
 
-        vertices[0] = transform.TransformPoint(new Vector3(bounds.max.x, bounds.max.y, bounds.max.z));
-        vertices[1] = transform.TransformPoint(new Vector3(-bounds.max.x, bounds.max.y, bounds.max.z));
-        vertices[2] = transform.TransformPoint(new Vector3(-bounds.max.x, bounds.max.y, -bounds.max.z));
-        vertices[3] = transform.TransformPoint(new Vector3(bounds.max.x, bounds.max.y, -bounds.max.z));
-        vertices[4] = transform.TransformPoint(new Vector3(bounds.min.x, bounds.min.y, bounds.min.z));
-        vertices[5] = transform.TransformPoint(new Vector3(-bounds.min.x, bounds.min.y, bounds.min.z));
-        vertices[6] = transform.TransformPoint(new Vector3(-bounds.min.x, bounds.min.y, -bounds.min.z));
-        vertices[7] = transform.TransformPoint(new Vector3(bounds.min.x, bounds.min.y, -bounds.min.z));
+        // Vector3[] vertices = new Vector3[8];
 
-        Debug.DrawLine(vertices[0], vertices[1], Color.red, 0.0F, false);
-        Debug.DrawLine(vertices[1], vertices[2], Color.red, 0.0F, false);
-        Debug.DrawLine(vertices[2], vertices[3], Color.red, 0.0F, false);
-        Debug.DrawLine(vertices[3], vertices[0], Color.red, 0.0F, false);
+        // end effector's coordinates are messed up, perhaps because they are not affected by animation?
+        // Could be what's here!
+        // vertices[0] = transform.TransformPoint(new Vector3(bounds.max.x, bounds.max.y, bounds.max.z));
+        // vertices[1] = transform.TransformPoint(new Vector3(-bounds.max.x, bounds.max.y, bounds.max.z));
+        // vertices[2] = transform.TransformPoint(new Vector3(-bounds.max.x, bounds.max.y, -bounds.max.z));
+        // vertices[3] = transform.TransformPoint(new Vector3(bounds.max.x, bounds.max.y, -bounds.max.z));
+        // vertices[4] = transform.TransformPoint(new Vector3(bounds.min.x, bounds.min.y, bounds.min.z));
+        // vertices[5] = transform.TransformPoint(new Vector3(-bounds.min.x, bounds.min.y, bounds.min.z));
+        // vertices[6] = transform.TransformPoint(new Vector3(-bounds.min.x, bounds.min.y, -bounds.min.z));
+        // vertices[7] = transform.TransformPoint(new Vector3(bounds.min.x, bounds.min.y, -bounds.min.z));
 
-        Debug.DrawLine(vertices[4], vertices[5], Color.red, 0.0F, false);
-        Debug.DrawLine(vertices[5], vertices[6], Color.red, 0.0F, false);
-        Debug.DrawLine(vertices[6], vertices[7], Color.red, 0.0F, false);
-        Debug.DrawLine(vertices[7], vertices[4], Color.red, 0.0F, false);
+        // Debug.DrawLine(vertices[0], vertices[1], Color.red, 0.0F, false);
+        // Debug.DrawLine(vertices[1], vertices[2], Color.red, 0.0F, false);
+        // Debug.DrawLine(vertices[2], vertices[3], Color.red, 0.0F, false);
+        // Debug.DrawLine(vertices[3], vertices[0], Color.red, 0.0F, false);
 
-        Debug.DrawLine(vertices[0], vertices[6], Color.red, 0.0F, false);
-        Debug.DrawLine(vertices[1], vertices[7], Color.red, 0.0F, false);
-        Debug.DrawLine(vertices[2], vertices[4], Color.red, 0.0F, false);
-        Debug.DrawLine(vertices[3], vertices[5], Color.red, 0.0F, false);
+        // Debug.DrawLine(vertices[4], vertices[5], Color.red, 0.0F, false);
+        // Debug.DrawLine(vertices[5], vertices[6], Color.red, 0.0F, false);
+        // Debug.DrawLine(vertices[6], vertices[7], Color.red, 0.0F, false);
+        // Debug.DrawLine(vertices[7], vertices[4], Color.red, 0.0F, false);
+
+        // Debug.DrawLine(vertices[0], vertices[6], Color.red, 0.0F, false);
+        // Debug.DrawLine(vertices[1], vertices[7], Color.red, 0.0F, false);
+        // Debug.DrawLine(vertices[2], vertices[4], Color.red, 0.0F, false);
+        // Debug.DrawLine(vertices[3], vertices[5], Color.red, 0.0F, false);        
     }
 }

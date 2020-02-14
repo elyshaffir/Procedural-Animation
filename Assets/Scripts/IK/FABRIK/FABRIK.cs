@@ -38,27 +38,7 @@ public class FABRIK : MonoBehaviour
             Debug.Log(transform.gameObject.name + ": FABRIKEffector already exists!");
         }
 
-        if (transform.childCount == 0 && !transform.gameObject.name.Contains("_end_effector"))
-        {
-            GameObject gameObject = new GameObject(transform.gameObject.name + "_end_effector");
-
-            gameObject.transform.parent = transform;
-
-            MeshFilter meshFilter = transform.gameObject.GetComponent<MeshFilter>();
-
-            if (meshFilter != null)
-            {
-                Bounds bounds = meshFilter.mesh.bounds;
-
-                gameObject.transform.localPosition = bounds.center + bounds.extents;
-            }
-            else
-            {
-                gameObject.transform.localPosition = Vector3.forward;
-            }
-
-            Debug.Log(transform.gameObject.name + ": end effector added as " + gameObject.name);
-        }
+        // NOTE: _end_effector mechanism was scrapped - there is already _end at the end of the rig
 
         foreach (Transform child in transform)
         {
@@ -82,6 +62,7 @@ public class FABRIK : MonoBehaviour
 
     private FABRIKChain LoadSystem(Transform transform, FABRIKChain parent = null, int layer = 0)
     {
+        Transform t = transform;
         List<FABRIKEffector> effectors = new List<FABRIKEffector>();
 
         // Use parent chain's end effector as our sub-base effector, e.g:
@@ -113,7 +94,6 @@ public class FABRIK : MonoBehaviour
             {
                 break;
             }
-
             transform = transform.GetChild(0);
         }
 
@@ -124,15 +104,16 @@ public class FABRIK : MonoBehaviour
         // Add to our end chain list if it is an end chain
         if (chain.IsEndChain)
         {
-            Debug.Log("THISISEND " + name + ": " + transform.childCount);
             endChains.Add(transform.gameObject.name, chain);
         }
         // Else iterate over each of the end effector's children to create a new chain in the layer above
-        else foreach (Transform child in transform)
+        else
+        {
+            foreach (Transform child in transform)
             {
                 LoadSystem(child, chain, layer + 1);
             }
-
+        }
         return chain;
     }
 
@@ -141,7 +122,7 @@ public class FABRIK : MonoBehaviour
         Destroy(rootObject);
     }
 
-    public void Update()
+    public void LateUpdate()
     {
         OnFABRIK();
         Solve();
