@@ -13,6 +13,9 @@ namespace ProceduralAnimation
         public float delta = 0.001f;
         [Range(0, 1)]
         public float snapBackStrength = 1f;
+        [Header("Added Parameters")]
+        public LayerMask ground;
+        public Transform playerTransform;
 
         float[] boneLengths; // Target to origin
         float completeLength;
@@ -76,6 +79,7 @@ namespace ProceduralAnimation
 
         void LateUpdate()
         {
+            ResolveTargetRotation();
             ResolveIK();
         }
 
@@ -196,6 +200,17 @@ namespace ProceduralAnimation
             current.rotation = root.rotation * rotation;
         }
 
+        void ResolveTargetRotation()
+        {
+            RaycastHit hit;
+            if (Physics.Raycast(transform.position, Vector3.down, out hit, ground))
+            {
+                target.rotation = Quaternion.FromToRotation(playerTransform.up, hit.normal) * playerTransform.rotation; // perhaps ve3.up could be changed to playerTransform.up
+                target.position = hit.point;
+                target.position += new Vector3(0, target.lossyScale.y / 3, 0); // assuming target is sphere                
+            }
+        }
+
         void OnDrawGizmos()
         {
             Transform current = transform;
@@ -208,7 +223,5 @@ namespace ProceduralAnimation
                 current = current.parent;
             }
         }
-
     }
-
 }
