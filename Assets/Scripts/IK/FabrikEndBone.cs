@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-namespace ProceduralAnimation
+namespace ProceduralAnimation.IK
 {
     class FabrikEndBone : MonoBehaviour
     {
@@ -16,6 +16,7 @@ namespace ProceduralAnimation
         [Header("Added Parameters")]
         public LayerMask ground;
         public Transform playerTransform;
+        public IKTargetType iKTargetType;
 
         float[] boneLengths; // Target to origin
         float completeLength;
@@ -202,10 +203,19 @@ namespace ProceduralAnimation
 
         void ResolveTargetRotation()
         {
-            RaycastHit hit;
-            if (Physics.Raycast(transform.position, Vector3.down, out hit, ground))
+            Vector3 raycastDirection;
+            switch (iKTargetType)
             {
-                target.rotation = Quaternion.FromToRotation(playerTransform.up, hit.normal) * playerTransform.rotation; // perhaps ve3.up could be changed to playerTransform.up
+                case IKTargetType.GROUND:
+                    raycastDirection = Vector3.down;
+                    break;
+                default:
+                    return;
+            }
+            RaycastHit hit;
+            if (Physics.Raycast(transform.position, raycastDirection, out hit, ground))
+            {
+                target.rotation = Quaternion.FromToRotation(playerTransform.up, hit.normal) * playerTransform.rotation;
                 target.position = hit.point;
                 target.position += new Vector3(0, target.lossyScale.y / 3, 0); // assuming target is sphere                
             }

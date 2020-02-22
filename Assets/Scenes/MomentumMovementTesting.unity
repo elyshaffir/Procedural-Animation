@@ -560,7 +560,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 544715872}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.28629684, y: -1.8000001, z: -0.2950821}
+  m_LocalPosition: {x: -0.472, y: 0.095, z: 0.327}
   m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_Children: []
   m_Father: {fileID: 1909808203}
@@ -730,7 +730,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 672826454}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.030000687, y: 1.07, z: 0.216}
+  m_LocalPosition: {x: -0.383, y: 0.207, z: -0.786}
   m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_Children: []
   m_Father: {fileID: 1909808203}
@@ -1272,7 +1272,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1909808198}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cbf5c18ad9474b0498267225dbfd5d2a, type: 3}
   m_Name: 
@@ -2504,6 +2504,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4078628095854422000}
+  - component: {fileID: 2558253594044477089}
   m_Layer: 0
   m_Name: hand.L
   m_TagString: Untagged
@@ -2511,6 +2512,29 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &2558253594044477089
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2558253594044477088}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b09cc919eb1b79e4e98cc8dd443e7ee3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chainLength: 3
+  target: {fileID: 544715876}
+  pole: {fileID: 672826458}
+  iterations: 10
+  delta: 0.001
+  snapBackStrength: 1
+  ground:
+    serializedVersion: 2
+    m_Bits: 256
+  playerTransform: {fileID: 1909808203}
+  iKTargetType: 2
 --- !u!1 &2591240349342216687
 GameObject:
   m_ObjectHideFlags: 0
@@ -2893,7 +2917,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2239369673764749133}
-  - component: {fileID: 4452275222756821428}
   m_Layer: 0
   m_Name: foot.L
   m_TagString: Untagged
@@ -2901,28 +2924,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &4452275222756821428
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4452275222756821427}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 17e6840bc1215a24ab1ae29404abe46e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  chainLength: 2
-  target: {fileID: 544715876}
-  pole: {fileID: 6457279134078945906}
-  iterations: 10
-  delta: 0.001
-  snapBackStrength: 1
-  ground:
-    serializedVersion: 2
-    m_Bits: 256
-  playerTransform: {fileID: 1909808203}
 --- !u!1 &4471564479452983984
 GameObject:
   m_ObjectHideFlags: 0
