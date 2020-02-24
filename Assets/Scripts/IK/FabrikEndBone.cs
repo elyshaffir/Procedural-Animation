@@ -3,20 +3,13 @@ using UnityEngine;
 
 namespace ProceduralAnimation.IK
 {
-    class FabrikEndBone : MonoBehaviour
+    abstract class FabrikEndBone : IKBehaviour
     {
         public int chainLength;
-        public Transform target;
         public Transform pole;
         [Header("Solver Parameters")]
         public int iterations = 10;
         public float delta = 0.001f;
-        [Range(0, 1)]
-        public float snapBackStrength = 1f;
-        [Header("Added Parameters")]
-        public LayerMask ground;
-        public Transform playerTransform;
-        public IKTargetType iKTargetType;
 
         float[] boneLengths; // Target to origin
         float completeLength;
@@ -201,25 +194,7 @@ namespace ProceduralAnimation.IK
             current.rotation = root.rotation * rotation;
         }
 
-        void ResolveTargetRotation()
-        {
-            Vector3 raycastDirection;
-            switch (iKTargetType)
-            {
-                case IKTargetType.GROUND:
-                    raycastDirection = Vector3.down;
-                    break;
-                default:
-                    return;
-            }
-            RaycastHit hit;
-            if (Physics.Raycast(transform.position, raycastDirection, out hit, ground))
-            {
-                target.rotation = Quaternion.FromToRotation(playerTransform.up, hit.normal) * playerTransform.rotation;
-                target.position = hit.point;
-                target.position += new Vector3(0, target.lossyScale.y / 3, 0); // assuming target is sphere                
-            }
-        }
+        protected abstract void ResolveTargetRotation();
 
         void OnDrawGizmos()
         {
