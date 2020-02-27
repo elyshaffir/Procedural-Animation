@@ -3,13 +3,13 @@ using UnityEngine;
 
 namespace ProceduralAnimation.IK
 {
-    abstract class FabrikEndBone : IKBehaviour
+    abstract class FabrikEndBone : IKBone
     {
-        public int chainLength;
         public Transform pole;
-        [Header("Solver Parameters")]
-        public int iterations = 10;
-        public float delta = 0.001f;
+
+        protected int chainLength;
+        protected int iterations = 10;
+        protected float delta = 0.001f;
 
         float[] boneLengths; // Target to origin
         float completeLength;
@@ -20,12 +20,7 @@ namespace ProceduralAnimation.IK
         Quaternion startTargetRotation;
         Transform root;
 
-        void Awake()
-        {
-            Init();
-        }
-
-        void Init()
+        protected void Init()
         {
             bones = new Transform[chainLength + 1];
             positions = new Vector3[chainLength + 1];
