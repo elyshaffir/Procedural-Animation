@@ -19,7 +19,6 @@ namespace ProceduralAnimation
         const float RollSpeed = 0.05f;
 
         public GameObject playerCamera;
-        public GameObject playerModel;
         public LayerMask ground;
 
         Rigidbody rb;
@@ -169,7 +168,7 @@ namespace ProceduralAnimation
         void Roll()
         {
             rollProgress -= RollSpeed;
-            playerModel.transform.Rotate(rotationAxis, 360 * RollSpeed, Space.World);
+            transform.Rotate(rotationAxis, 360 * RollSpeed, Space.World);
             if (rollProgress <= 0)
             {
                 rollProgress = 0;
@@ -206,7 +205,7 @@ namespace ProceduralAnimation
             {
                 Vector3 tilt = CalculateTilt();
                 Quaternion targetRotation = Quaternion.Euler(tilt);
-                playerModel.transform.rotation = Quaternion.Lerp(playerModel.transform.rotation, targetRotation, RotationSpeed * Time.deltaTime);
+                transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, RotationSpeed * Time.deltaTime);
             }
         }
 
