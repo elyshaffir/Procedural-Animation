@@ -18,7 +18,7 @@ namespace ProceduralAnimation
         const float RollForce = 10f;
         const float RollSpeed = 0.05f;
 
-        public GameObject playerCamera;
+        public PlayerCamera playerCamera;
         public LayerMask ground;
 
         Rigidbody rb;
