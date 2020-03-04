@@ -3926,7 +3926,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a7b13bcafa8d61418c9a2bbbb716114, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 1427327543}
+  player: {fileID: 1508985929}
   solidObjects:
     serializedVersion: 2
     m_Bits: 256
@@ -5316,7 +5316,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1508985930
 Transform:
   m_ObjectHideFlags: 0
@@ -5325,7 +5325,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1508985929}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 2, y: 0, z: 0}
   m_LocalScale: {x: 0.05, y: 0.05, z: 0.05}
   m_Children:
   - {fileID: 1064939970}
@@ -6292,6 +6292,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1909808203}
   - component: {fileID: 1909808205}
+  - component: {fileID: 1909808199}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -6299,6 +6300,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &1909808199
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1909808198}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44b700baa1f5fb248b4bdb9b60e01da9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mimicModel: {fileID: 1508985929}
+  animatedModel: {fileID: 8296172667527176949}
 --- !u!4 &1909808203
 Transform:
   m_ObjectHideFlags: 0
@@ -6324,7 +6339,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1909808198}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 65190eb0d706c5c4aafd01cf097adbf4, type: 3}
   m_Name: 
@@ -6333,6 +6348,9 @@ MonoBehaviour:
   playerRagdoll: {fileID: 376935883}
   playerTransitionModel: {fileID: 1430503540}
   playerCameraTarget: {fileID: 1427327543}
+  lerping: 0
+  notFinishedYet: 0
+  jointNames: []
 --- !u!1 &1917484755
 GameObject:
   m_ObjectHideFlags: 0
@@ -7869,7 +7887,7 @@ SkinnedMeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2502203975390636485}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -8569,7 +8587,7 @@ Animator:
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 7c8a9c75f6818ef40b5a85d271050299, type: 3}
   m_Controller: {fileID: 9100000, guid: e9fac0c9da91d404c8407357008d6574, type: 2}
-  m_CullingMode: 1
+  m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
