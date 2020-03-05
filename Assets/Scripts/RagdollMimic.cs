@@ -20,10 +20,12 @@ namespace ProceduralAnimation
         public Transform mimicObjectToFollow;
 
         bool physicsActive = false;
+        Vector3 lastHipsPosition;
 
         void Start()
         {
             SetMimicPhysics(mimicModel.transform, physicsActive);
+            lastHipsPosition = mimicObjectToFollow.position;
         }
 
         void FixedUpdate()
@@ -34,7 +36,7 @@ namespace ProceduralAnimation
             }
             else
             {
-                animatedModel.transform.position = mimicObjectToFollow.position;
+                animatedModel.transform.position += mimicObjectToFollow.position - lastHipsPosition;
             }
             if (Input.GetKeyDown(KeyCode.G))
             {
@@ -42,6 +44,7 @@ namespace ProceduralAnimation
                 SetMimicPhysics(mimicModel.transform, physicsActive);
                 SetPhysics(animatedModel.GetComponent<Rigidbody>(), !physicsActive);
             }
+            lastHipsPosition = mimicObjectToFollow.position;
         }
 
         void SetMimicPhysics(Transform current, bool active)
