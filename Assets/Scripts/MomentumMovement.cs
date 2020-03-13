@@ -88,8 +88,7 @@ namespace ProceduralAnimation
 
         void CalculateMovement()
         {
-            RaycastHit hit;
-            grounded = Physics.Raycast(transform.position, Vector3.down, out hit, 1.6f, ground);
+            grounded = Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 1.6f, ground);
             forceAngle = Vector3.Angle(hit.normal, Vector3.up);
             if (grounded)
             {
